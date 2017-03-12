@@ -1,44 +1,28 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.1
-import QtQuick.Layouts 1.3
-import QtQuick.Controls.Material 2.1
+import Qt.labs.platform 1.0
+import "menus"
 
-ToolBar {
-    height: 30
-    Material.primary: Material.background
-    Row {
-        anchors.fill: parent
-        ToolButton {
-            text: "File"
-            height: parent.height
-            onClicked: fileMenu.open()
-        }
-        ToolButton {
-            text: "Help"
-            height: parent.height
-            onClicked: helpMenu.open()
-        }
-    }
+MenuBar {
 
     Menu {
         id: fileMenu
-        y: 30
+        title: qsTr("File")
         MenuItem {
-            text: "Reload"
-            onClicked: measurementsModel.reload()
-        }
-        MenuSeparator{}
-        MenuItem {
-            text: "Close"
-            onClicked: measurementsWindow.close()
+            text: qsTr("Close")
+            shortcut: StandardKey.Close
+            onTriggered: measurementsWindow.close()
         }
     }
 
     Menu {
-        id: helpMenu
-        y: 30
+        id: editMenu
+        title: qsTr("&Edit")
         MenuItem {
-            text: "About..."
+            text: qsTr("Refresh")
+            shortcut: StandardKey.Refresh
+            onTriggered: {}
         }
     }
+
+    HelpMenu{}
 }

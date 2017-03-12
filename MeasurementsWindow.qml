@@ -3,7 +3,6 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import QtQuick.Controls.Material 2.1
-import QtWebSockets 1.1
 
 Window {
     id: thisWindow
@@ -15,11 +14,10 @@ Window {
     Material.theme: Material.Dark
     Material.primary: "#111111"
     Material.background: "#1e1e1e"
-    modality: Qt.ApplicationModal
+    MeasurementsMenu{}
 
     Page {
         anchors.fill: parent
-        header: MeasurementsMenu{id: menu }
 
         ToolBar {
             id: toolbar
@@ -31,10 +29,10 @@ Window {
                 anchors.fill: parent
                 anchors.leftMargin: spacing
                 spacing: 10
-                MeasurementsLabel {text: "Name"; font.bold: true}
-                MeasurementsLabel {text: "Symbol"; font.bold: true}
-                MeasurementsLabel {text: "Multiply"; font.bold: true}
-                MeasurementsLabel {text: "Type"; font.bold: true}
+                MeasurementsLabel {text: "Name"}
+                MeasurementsLabel {text: "Symbol"}
+                MeasurementsLabel {text: "Multiply"}
+                MeasurementsLabel {text: "Type"}
             }
         }
 
@@ -45,7 +43,7 @@ Window {
             anchors.bottom: parent.bottom
             clip: true
 
-            model: measurementsModel
+            model: MeasurementsModel
 
             delegate: ItemDelegate {
                 Row {
@@ -78,13 +76,9 @@ Window {
     }
 
     function open() {
-        thisWindow.visible = true
-        if (measurementsModel.count == 0) {
-            measurementsModel.reload()
+        if (thisWindow.visible === true) {
+            thisWindow.raise()
         }
-    }
-
-    function close() {
-        thisWindow.visible = false
+        thisWindow.show()
     }
 }

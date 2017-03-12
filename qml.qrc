@@ -19,8 +19,7 @@
         <file>MeasurementsWindow.qml</file>
         <file>MeasurementsLabel.qml</file>
         <file>Separator.qml</file>
-        <file>MeasurementsWorker.js</file>
         <file>MeasurementsMenu.qml</file>
-        <file>MeasurementsListModel.qml</file>
+        <file>menus/HelpMenu.qml</file>
     </qresource>
 </RCC>

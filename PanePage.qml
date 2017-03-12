@@ -16,7 +16,7 @@ Page {
 
             Label {
                 id: titleLabel
-                font.bold: true
+//                font.bold: true
                 elide: Label.ElideRight
                 Layout.fillWidth: true
             }

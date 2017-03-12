@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
+import Qt.labs.platform 1.0
 
 ApplicationWindow {
     id: mainWindow
@@ -14,8 +15,8 @@ ApplicationWindow {
     Material.theme: Material.Dark
     Material.primary: "#111111"
     Material.background: "#1e1e1e"
+    MainMenu{}
 
-    header: MainMenu{}
 
     Row {
         anchors.fill: parent
@@ -49,17 +50,4 @@ ApplicationWindow {
     }
 
     MeasurementsWindow{id: measurementsWindow}
-    MeasurementsListModel {id: measurementsModel}
-    WorkerScript {id: measurementsWorker; source: "MeasurementsWorker.js"}
-
-    Component.onCompleted: {
-        WSClient.onMsg.connect(function(msg) {
-            var obj = JSON.parse(msg)
-
-            switch (obj.cmd) {
-            case "get_measurements":
-                measurementsModel.processReload(obj.cmd, obj.status, obj.res)
-            }
-        })
-    }
 }
