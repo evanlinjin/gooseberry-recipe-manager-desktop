@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>PanePage.qml</file>
+        <file>Icon.qml</file>
+        <file>icons/add.svg</file>
+        <file>icons/back.svg</file>
+        <file>icons/bell.svg</file>
+        <file>icons/close.svg</file>
+        <file>icons/contents.svg</file>
+        <file>icons/find.svg</file>
+        <file>icons/help.svg</file>
+        <file>icons/home.svg</file>
+        <file>icons/info.svg</file>
+        <file>icons/people.svg</file>
+        <file>icons/settings.svg</file>
+        <file>MainMenu.qml</file>
+        <file>MeasurementsWindow.qml</file>
+        <file>MeasurementsLabel.qml</file>
+        <file>Separator.qml</file>
+        <file>MeasurementsWorker.js</file>
+        <file>MeasurementsMenu.qml</file>
+        <file>MeasurementsListModel.qml</file>
+    </qresource>
+</RCC>
