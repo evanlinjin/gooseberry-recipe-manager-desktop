@@ -2,7 +2,6 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
-import Qt.labs.platform 1.0
 
 ApplicationWindow {
     id: mainWindow
@@ -15,8 +14,8 @@ ApplicationWindow {
     Material.theme: Material.Dark
     Material.primary: "#111111"
     Material.background: "#1e1e1e"
-    MainMenu{}
-
+    Material.accent: Material.Grey
+    header: MainMenu{}
 
     Row {
         anchors.fill: parent
@@ -26,21 +25,30 @@ ApplicationWindow {
         PanePage {
             id: eventsPane
             titleLabel: "Events"
+            handleType: "Event"
         }
 
         PanePage {
             id: recipesPane
             titleLabel: "Recipes"
+            handleType: "Recipe"
         }
 
         PanePage {
             id: ingredientsPane
             titleLabel: "Ingredients"
+            handleType: "Ingredient"
+
+            model: IngredientsModel
+            delegate: IngredientsItemDelegate{}
+
+            reloadTrigger: IngredientsModel.reload
         }
     }
 
     RowLayout {
         anchors.fill: parent
+        spacing: 0
         Item{}
         Separator{}
         Item{}
@@ -50,4 +58,10 @@ ApplicationWindow {
     }
 
     MeasurementsWindow{id: measurementsWindow}
+    IngredientEditWindow{id: ingredientEditWindow}
+
+    Component.onCompleted: {
+        MeasurementsModel.reload()
+        IngredientsModel.reload()
+    }
 }

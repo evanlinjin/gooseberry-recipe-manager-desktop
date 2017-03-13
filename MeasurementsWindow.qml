@@ -14,10 +14,10 @@ Window {
     Material.theme: Material.Dark
     Material.primary: "#111111"
     Material.background: "#1e1e1e"
-    MeasurementsMenu{}
 
     Page {
         anchors.fill: parent
+        header: MeasurementsMenu{}
 
         ToolBar {
             id: toolbar

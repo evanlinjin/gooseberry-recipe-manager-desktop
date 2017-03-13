@@ -1,22 +1,22 @@
-#ifndef MEASUREMENTSMODEL_H
-#define MEASUREMENTSMODEL_H
+#ifndef INGREDIENTSMODEL_H
+#define INGREDIENTSMODEL_H
 
 #include <QObject>
 #include <QAbstractListModel>
 
 #include "../dstypes.h"
 
-class MeasurementsModel : public QAbstractListModel
+class IngredientsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    MeasurementsModel(QObject *parent = 0);
+    IngredientsModel(QObject *parent = 0);
 
     enum Roles {
         nameRole = Qt::UserRole + 1,
-        multiplyRole,
-        symbolRole,
-        typeRole
+        descriptionRole,
+        kgPerCupRole,
+        tagsRole
     };
 
     QHash<int, QByteArray> roleNames() const;
@@ -24,14 +24,14 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
 private:
-    QList<DSMeasurement> m_list;
+    QList<DSIngredient> m_list;
 
 signals:
     void reload();
 
 public slots:
-    void reloadData(QList<DSMeasurement> mList);
+    void reloadData(QList<DSIngredient> mList);
     void clear();
 };
 
-#endif // MEASUREMENTSMODEL_H
+#endif // INGREDIENTSMODEL_H

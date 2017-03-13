@@ -14,10 +14,6 @@
 #include "dstypes.h"
 #include "ongoingcommands.h"
 
-#define CMD_GET_MEASUREMENTS "get_measurements"
-#define STATUS_OK "OK"
-#define STATUS_ERROR "ERROR"
-
 class NetworkManager : public QObject
 {
     Q_OBJECT
@@ -32,16 +28,20 @@ private:
 
 signals:
     void recieved_error(QString cmd, QString msg);
+
     void recieved_measurements(QList<DSMeasurement>);
+    void recieved_get_all_ingredients(QList<DSIngredient>);
 
 public slots:
     void get_measurements();
+    void get_all_ingredients();
 
 private slots:
+    void process_measurements(QJsonValue v);
+    void process_get_all_ingredients(QJsonValue v);
+
     void handleRequest(QString cmd, QJsonValue v);
     void handleReply(QNetworkReply* reply);
-
-    void process_measurements(QJsonValue v);
 };
 
 #endif // NETWORKMANAGER_H

@@ -32,7 +32,7 @@ int MeasurementsModel::rowCount(const QModelIndex &) const {
     return m_list.size();
 }
 
-void MeasurementsModel::reload(QList<DSMeasurement> mList)
+void MeasurementsModel::reloadData(QList<DSMeasurement> mList)
 {
     this->clear();
     beginInsertRows(QModelIndex(), 0, mList.count()-1);

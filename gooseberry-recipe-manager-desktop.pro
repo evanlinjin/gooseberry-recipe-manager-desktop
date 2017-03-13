@@ -3,10 +3,10 @@ QT += qml quick quickcontrols2 websockets widgets
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    wsclient.cpp \
     networkmanager.cpp \
     ongoingcommands.cpp \
-    models/measurementsmodel.cpp
+    models/measurementsmodel.cpp \
+    models/ingredientsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,8 +33,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    wsclient.h \
     networkmanager.h \
     ongoingcommands.h \
     dstypes.h \
-    models/measurementsmodel.h
+    models/measurementsmodel.h \
+    models/ingredientsmodel.h

@@ -1,43 +1,61 @@
 import QtQuick 2.7
-import Qt.labs.platform 1.0
-import "menus"
+import QtQuick.Controls 2.1
+import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.1
 
-MenuBar {
+ToolBar {
+    height: 30
+    Material.primary: Material.background
+    Row {
+        anchors.fill: parent
+        ToolButton {
+            text: "File"
+            height: parent.height
+            onClicked: fileMenu.open()
+        }
+        ToolButton {
+            text: "Tools"
+            height: parent.height
+            onClicked: toolsMenu.open()
+        }
+        ToolButton {
+            text: "Help"
+            height: parent.height
+            onClicked: helpMenu.open()
+        }
+    }
 
     Menu {
         id: fileMenu
-        title: qsTr("File")
-        Menu {
-            title: qsTr("New")
-            MenuItem {text: qsTr("Event...")}
-            MenuItem {text: qsTr("Recipe...")}
-            MenuItem {text: qsTr("Ingredient...")}
-        }
-        MenuItem {separator: true}
+        y: 30
         MenuItem {
-            text: qsTr("Quit")
-            onTriggered: Qt.quit()
-            shortcut: StandardKey.Quit
-            role: MenuItem.QuitRole
+            text: "New..."
+        }
+        MenuSeparator{}
+        MenuItem {
+            text: "Settings..."
+        }
+        MenuSeparator{}
+        MenuItem {
+            text: "Quit"
+            onClicked: Qt.quit()
         }
     }
 
     Menu {
         id: toolsMenu
-        title: qsTr("&Tools")
+        y: 30
         MenuItem {
-            text: qsTr("Measurements...")
-            onTriggered: measurementsWindow.open()
-            shortcut: StandardKey.Preferences
-            role: MenuItem.ApplicationSpecificRole
-        }
-        MenuItem {separator: true}
-        MenuItem {
-            text: qsTr("Settings...")
-            shortcut: StandardKey.Preferences
-            role: MenuItem.PreferencesRole
+            text: "Measurements..."
+            onClicked: measurementsWindow.open()
         }
     }
 
-    HelpMenu{}
+    Menu {
+        id: helpMenu
+        y: 30
+        MenuItem {
+            text: "About..."
+        }
+    }
 }
