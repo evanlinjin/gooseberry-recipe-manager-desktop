@@ -3,18 +3,15 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import QtQuick.Controls.Material 2.1
+import Gooseberry 1.0
+import "components"
 
 Window {
     id: thisWindow
     title: editMode ? "Edit Ingredient" : "Add Ingredient";
-    width: 420; height: page.height
-    minimumWidth: width; minimumHeight: height
-    maximumWidth: width; maximumHeight: height
-    flags: Qt.WindowCloseButtonHint; modality: Qt.WindowModal
-
-    Material.theme: Material.Dark
-    Material.primary: "#111111"; Material.background: "#1e1e1e"
-    Material.accent: Material.Grey
+    width: 420; height: 420
+    minimumWidth: 320; minimumHeight: 320
+    flags: Qt.Dialog; modality: Qt.WindowModal
 
     property bool editMode: true
     property string m_name: ""
@@ -24,118 +21,155 @@ Window {
 
     Page {
         id: page
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        height: layoutFields.height + 15
+        anchors.fill: parent
 
-        ColumnLayout {
-            id: layoutFields
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 15
+        header: ToolBar {
+            Material.elevation: 0
 
-            Label {
-                text: "Name"
-                font.pixelSize: 11
-                font.bold: true
-            }
+            RowLayout {
+                anchors.fill: parent
+                spacing: 0
 
-            TextField {
-                placeholderText: "Name"
-                text: m_name
-                font.capitalization: Font.AllUppercase
-                font.bold: true
-                Layout.fillWidth: true
-                onTextChanged: m_name = text
-                enabled: !editMode
-            }
-
-            Label {
-                text: "Description"
-                font.pixelSize: 11
-                font.bold: true
-            }
-
-            Flickable {
-                Layout.fillWidth: true
-                height: 120
-                TextArea.flickable: TextArea {
-                    placeholderText: "Enter description"
-                    text: m_description
-                    wrapMode: TextArea.Wrap
-                    onTextChanged: m_description = text
+                IconToolButton {
+                    iconName: "close"
+                    ToolTip.text: "Cancel"
+                    onClicked: thisWindow.close()
                 }
-                ScrollBar.vertical: ScrollBar { }
+
+                HeaderLabel {
+                    text: m_name
+                }
+
+                IconToolButton {
+                    iconName: "save"
+                    ToolTip.text: "Save"
+                    onClicked: thisWindow.close()
+                }
             }
+        }
 
-            Label {
-                text: "Tags"
-                font.pixelSize: 11
-                font.bold: true
-            }
+        Flickable {
+            anchors.fill: parent
+            contentHeight: layoutFields.height + 40
+            clip: true
+            ScrollBar.vertical: ScrollBar {}
 
-            Item {
-                height: 5
-                width: 5
-            }
+            ColumnLayout {
+                id: layoutFields
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 20
+                spacing: 20
 
-            ListView {
-                id: tagsView
-                Layout.fillWidth: true
-                height: 30
-                spacing: 10
-                clip: true
-                orientation: ListView.Horizontal
-                ScrollBar.horizontal: ScrollBar { }
+                GroupBox {
+                    title: "Name & Description"
+                    Layout.fillWidth: true
 
-                model: m_tags
-                delegate: Rectangle {
-                    color: Material.primary
-                    radius: 2
-                    width: rowed.width + 15
-                    height: rowed.height + 10
-                    Row {
-                        id: rowed
-                        spacing: 5
-                        anchors.centerIn: parent
-                        Label {
-                            id: textLabel
-                            text: modelData
+                    ColumnLayout {
+                        anchors.fill: parent
+
+                        TextField {
+                            placeholderText: "Name"
+                            text: m_name
+                            Layout.fillWidth: true
+                            onTextChanged: m_name = text
+                            enabled: !editMode
                         }
-                        Icon {
-                            name: "close"
-                            size: parent.height
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: removeTag(modelData)
+
+                        TextArea {
+                            placeholderText: "Enter description"
+                            text: m_description
+                            Layout.fillWidth: true
+                            wrapMode: TextArea.Wrap
+                            onTextChanged: m_description = text
+                        }
+                    }
+                }
+
+                GroupBox {
+                    title: "Tags"
+                    Layout.fillWidth: true
+
+                    ColumnLayout {
+                        anchors.fill: parent
+
+                        Item {
+                            height: 2.5
+                            Layout.fillWidth: true
+                        }
+
+                        ListView {
+                            id: tagsView
+                            Layout.fillWidth: true
+                            height: contentHeight
+                            width: parent.width
+                            contentHeight: 40
+                            spacing: 10
+                            orientation: ListView.Horizontal
+                            clip: true
+                            model: m_tags
+                            delegate: TagItem {
+                                text: modelData
+                                mouseArea.onClicked: removeTag(modelData)
+                            }
+                            ScrollBar.horizontal: ScrollBar {}
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+
+                            TextField {
+                                id: addTagField
+                                placeholderText: "Add tag..."
+                                Layout.fillWidth: true
+                                onAccepted: addTag(text)
+                            }
+
+                            IconToolButton {
+                                id: addButton
+                                iconName: "add"
+                                ToolTip.text: "Add tag"
+                                onClicked: addTag(addTagField.text)
                             }
                         }
                     }
                 }
-            }
 
-            RowLayout {
-                Layout.fillWidth: true
-
-                TextField {
-                    id: addTagField
-                    placeholderText: "Add tag..."
+                GroupBox {
+                    title: "Weight / Volume Conversion"
                     Layout.fillWidth: true
-                    onAccepted: addTag(text)
-                }
 
-                ToolButton {
-                    id: addButton
-                    Icon {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.verticalCenter: parent.verticalCenter
-                        name: "add"
+                    GridLayout {
+                        anchors.fill: parent
+                        columns: 3
+
+                        Label {text: "Weight"}
+                        Label {}
+                        Label {text: "Volume"}
+
+                        DoubleTextField {}
+                        Label {text: "="}
+                        DoubleTextField {}
+
+                        ComboBox {
+                            Layout.fillWidth: true
+                            textRole: "symbol"
+                            displayText: model[currentIndex].symbol
+                            model: windowModel.weights
+                            Material.elevation: 0
+                            flat: true
+                        }
+                        Label {}
+                        ComboBox {
+                            Layout.fillWidth: true
+                            textRole: "symbol"
+                            displayText: model[currentIndex].symbol
+                            model: windowModel.volumes
+                            Material.elevation: 0
+                            flat: true
+                        }
                     }
-                    ToolTip.visible: hovered
-                    ToolTip.text: "New tag"
-                    onClicked: addTag(addTagField.text)
                 }
             }
         }
@@ -184,4 +218,13 @@ Window {
 
     onM_nameChanged: console.log("CHANGED: name:", m_name)
     onM_descriptionChanged: console.log("CHANGED: description:", m_description)
+
+    onClosing: {
+        thisWindow.destroy()
+    }
+
+    IngredientEditWindowModel {
+        id: windowModel
+        Component.onCompleted: linkUp(NetworkManager, MeasurementsModel, IngredientsModel)
+    }
 }

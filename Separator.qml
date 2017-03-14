@@ -5,8 +5,7 @@ import QtQuick.Controls.Material 2.1
 Rectangle {
     gradient: Gradient {
             GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.2; color: Material.background }
-            GradientStop { position: 1.0; color: Material.background }
+            GradientStop { position: 0.2; color: Material.foreground }
         }
     opacity: 0.1
     width: 1

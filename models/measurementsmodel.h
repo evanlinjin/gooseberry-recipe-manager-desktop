@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QDebug>
+#include <QVariant>
 
 #include "../dstypes.h"
 
@@ -32,6 +34,9 @@ signals:
 public slots:
     void reloadData(QList<DSMeasurement> mList);
     void clear();
+
+    QVariant getVolumeMeasurements();
+    QVariant getWeightMeasurements();
 };
 
 #endif // MEASUREMENTSMODEL_H

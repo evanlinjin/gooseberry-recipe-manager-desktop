@@ -1,6 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.1
+import "components"
 
 Page {
     id: panePage
@@ -16,57 +18,33 @@ Page {
     property var searchTrigger: function(){}
 
     header: ToolBar {
+        Material.elevation: 0
         RowLayout {
             spacing: 0
             anchors.fill: parent
             anchors.leftMargin: 15
 
-            Label {
+            HeaderLabel {
                 id: titleLabel
-                elide: Label.ElideRight
-                font.capitalization: Font.AllUppercase
-                font.bold: true
-                Layout.fillWidth: true
             }
 
-            ToolButton {
+            IconToolButton {
                 id: addButton
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
-                Icon {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    name: "add"
-                }
-                ToolTip.visible: hovered
+                iconName: "add"
                 ToolTip.text: "New " + handleType
                 onClicked: addTrigger()
             }
 
-            ToolButton {
+            IconToolButton {
                 id: reloadButton
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
-                Icon {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    name: "refresh"
-                }
-                ToolTip.visible: hovered
+                iconName: "refresh"
                 ToolTip.text: "Reload " + handleType + "s"
                 onClicked: reloadTrigger()
             }
 
-            ToolButton {
+            IconToolButton {
                 id: searchButton
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
-                Icon {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    name: "find"
-                }
-                ToolTip.visible: hovered
+                iconName: "find"
                 ToolTip.text: "Search " + handleType + "s"
                 onClicked: searchTrigger()
             }

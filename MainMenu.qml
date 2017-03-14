@@ -6,6 +6,7 @@ import QtQuick.Controls.Material 2.1
 ToolBar {
     height: 30
     Material.primary: Material.background
+    Material.elevation: 0
     Row {
         anchors.fill: parent
         ToolButton {

@@ -11,9 +11,6 @@ Window {
     minimumWidth: 290
     minimumHeight: 170
     title: qsTr("Measurements - Recipe Manager")
-    Material.theme: Material.Dark
-    Material.primary: "#111111"
-    Material.background: "#1e1e1e"
 
     Page {
         anchors.fill: parent
@@ -25,6 +22,7 @@ Window {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 30
+            Material.elevation: 0
             Row {
                 anchors.fill: parent
                 anchors.leftMargin: spacing

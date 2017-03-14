@@ -11,10 +11,6 @@ ApplicationWindow {
     minimumWidth: 520
     minimumHeight: 280
     title: qsTr("Dash - Recipe Manager")
-    Material.theme: Material.Dark
-    Material.primary: "#111111"
-    Material.background: "#1e1e1e"
-    Material.accent: Material.Grey
     header: MainMenu{}
 
     Row {
@@ -58,10 +54,14 @@ ApplicationWindow {
     }
 
     MeasurementsWindow{id: measurementsWindow}
-    IngredientEditWindow{id: ingredientEditWindow}
 
     Component.onCompleted: {
         MeasurementsModel.reload()
         IngredientsModel.reload()
+    }
+
+    function openIngredientEditWindow(windowParent, model) {
+        Qt.createComponent("qrc:/IngredientEditWindow.qml"
+                           ).createObject(windowParent).open(model)
     }
 }

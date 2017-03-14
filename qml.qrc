@@ -25,5 +25,10 @@
         <file>icons/edit.svg</file>
         <file>IngredientsItemDelegate.qml</file>
         <file>IngredientEditWindow.qml</file>
+        <file>icons/save.svg</file>
+        <file>components/IconToolButton.qml</file>
+        <file>components/HeaderLabel.qml</file>
+        <file>components/TagItem.qml</file>
+        <file>components/DoubleTextField.qml</file>
     </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-QT += qml quick quickcontrols2 websockets widgets
+QT += qml quick quickcontrols2
 
 CONFIG += c++11
 
@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     networkmanager.cpp \
     ongoingcommands.cpp \
     models/measurementsmodel.cpp \
-    models/ingredientsmodel.cpp
+    models/ingredientsmodel.cpp \
+    models/ingredienteditwindowmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -37,4 +38,5 @@ HEADERS += \
     ongoingcommands.h \
     dstypes.h \
     models/measurementsmodel.h \
-    models/ingredientsmodel.h
+    models/ingredientsmodel.h \
+    models/ingredienteditwindowmodel.h
