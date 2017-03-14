@@ -1,35 +1,35 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
+import QtQuick.Layouts 1.3
+
+import "components"
 
 ItemDelegate {
     width: parent.width
-    Label {
-        text: name
-        font.bold: true
-        elide: Label.ElideRight
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        anchors.right: editButton.left
-        anchors.leftMargin: 20
-    }
 
-    ToolButton {
-        id: editButton
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        Icon {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            name: "edit"
-            opacity: editButton.hovered ? 1 : 0.1
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 5
+        anchors.leftMargin: 15
+        anchors.rightMargin: 15
+        spacing: 0
+
+        Label {
+            id: ingredientName
+            text: name
+            font.bold: true
+            elide: Label.ElideRight
+            Layout.fillWidth: true
         }
-
-        ToolTip.visible: hovered
-        ToolTip.text: "Edit entry"
-
-        onClicked: openIngredientEditWindow(this, name)
+        Label {
+            text: ("%1").arg(tags)
+            opacity: 0.6
+            font.pixelSize: ingredientName.font.pixelSize*4/5
+            elide: Label.ElideRight
+            Layout.fillWidth: true
+        }
     }
-
+    onClicked: openIngredientEditWindow(this, name)
     ToolTip.visible: hovered
-    ToolTip.text: ("Description: %1\nTags: %2\nKg/Cup: %3").arg(description).arg(tags).arg(kg_per_cup)
+    ToolTip.text: ("Conversion: %1 kg/cup").arg(kg_per_cup)
 }

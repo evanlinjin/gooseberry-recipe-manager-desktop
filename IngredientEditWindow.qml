@@ -13,6 +13,8 @@ Window {
     minimumWidth: 480; minimumHeight: 320
     flags: Qt.Dialog; modality: Qt.WindowModal
 
+
+
     Page {
         id: page
         anchors.fill: parent
@@ -59,21 +61,33 @@ Window {
 
         Flickable {
             anchors.fill: parent
-            contentHeight: layoutFields.height + 40
             clip: true
+            contentHeight: layoutFields.height + layoutFields.spacing*2
             ScrollBar.vertical: ScrollBar {}
 
-            ColumnLayout {
+            GridLayout {
                 id: layoutFields
                 anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 20
-                spacing: 20
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.margins: spacing
+                property int spacing: 20
+                property int maxWidth: 1024
+                property int maxWidth1: 670
+                property int maxWidth2: rows === 2 ? maxWidth*2/6 : maxWidth1
+                property int switchWidth: 210
+                width: (parent.width < maxWidth ? (parent.width < maxWidth1 ? parent.width : (rows == 2 ? parent.width : maxWidth1 ) ) : maxWidth) - spacing*2
+                rows: parent.width > maxWidth - switchWidth ? 2 : -1
+                columnSpacing: spacing
+                rowSpacing: spacing
+
+                flow: GridLayout.TopToBottom
 
                 GroupBox {
+                    id: nameGroup
                     title: "Name & Description"
                     Layout.fillWidth: true
+                    Layout.maximumWidth: parent.maxWidth1
+                    Layout.minimumHeight: conversionGroup.height
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -98,6 +112,7 @@ Window {
                 GroupBox {
                     title: "Tags"
                     Layout.fillWidth: true
+                    Layout.maximumWidth: parent.maxWidth1
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -148,8 +163,10 @@ Window {
                 }
 
                 GroupBox {
+                    id: conversionGroup
                     title: "Weight / Volume Conversion"
                     Layout.fillWidth: true
+                    Layout.maximumWidth: parent.maxWidth2
 
                     ColumnLayout {
                         anchors.fill: parent

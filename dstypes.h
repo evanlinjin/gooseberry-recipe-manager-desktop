@@ -73,7 +73,7 @@ class Ingredient : public QObject {
     Q_PROPERTY(QStringList tags READ tags WRITE setTags NOTIFY tagsChanged)
 
 public:
-    explicit Ingredient(QObject *parent = 0) : QObject(parent) {}
+    explicit Ingredient(QObject *parent = 0) : QObject(parent) {m.kg_per_cup = 0;}
 
     QString name() const {return m.name;}
     QString desc() const {return m.description;}
