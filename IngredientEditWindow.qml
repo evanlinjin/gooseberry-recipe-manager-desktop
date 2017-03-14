@@ -8,16 +8,10 @@ import "components"
 
 Window {
     id: thisWindow
-    title: editMode ? "Edit Ingredient" : "Add Ingredient";
-    width: 420; height: 420
-    minimumWidth: 320; minimumHeight: 320
+    title: (m.editMode ? "Edit Ingredient" : "New Ingredient") + " - Recipe Manager"
+    width: 480; height: 620
+    minimumWidth: 480; minimumHeight: 320
     flags: Qt.Dialog; modality: Qt.WindowModal
-
-    property bool editMode: true
-    property string m_name: ""
-    property string m_description: ""
-    property var m_tags: []
-    property double m_kg_per_cup: 0.0
 
     Page {
         id: page
@@ -31,18 +25,24 @@ Window {
                 spacing: 0
 
                 IconToolButton {
-                    iconName: "close"
+                    iconName: "cancel"
                     ToolTip.text: "Cancel"
                     onClicked: thisWindow.close()
                 }
 
                 HeaderLabel {
-                    text: m_name
+                    text: m.name
                 }
 
                 IconToolButton {
-                    iconName: "save"
-                    ToolTip.text: "Save"
+                    iconName: "tick"
+                    ToolTip.text: "Submit Changes"
+                    onClicked: thisWindow.close()
+                }
+
+                IconToolButton {
+                    iconName: "tick"
+                    ToolTip.text: "Submit Changes"
                     onClicked: thisWindow.close()
                 }
             }
@@ -70,19 +70,17 @@ Window {
                         anchors.fill: parent
 
                         TextField {
+                            id: name_input
                             placeholderText: "Name"
-                            text: m_name
                             Layout.fillWidth: true
-                            onTextChanged: m_name = text
-                            enabled: !editMode
+                            enabled: !m.editMode
                         }
 
                         TextArea {
+                            id: desc_input
                             placeholderText: "Enter description"
-                            text: m_description
                             Layout.fillWidth: true
                             wrapMode: TextArea.Wrap
-                            onTextChanged: m_description = text
                         }
                     }
                 }
@@ -108,10 +106,10 @@ Window {
                             spacing: 10
                             orientation: ListView.Horizontal
                             clip: true
-                            model: m_tags
+                            model: m.tags
                             delegate: TagItem {
                                 text: modelData
-                                mouseArea.onClicked: removeTag(modelData)
+                                xButton.onClicked: m.removeTag(modelData)
                             }
                             ScrollBar.horizontal: ScrollBar {}
                         }
@@ -123,14 +121,14 @@ Window {
                                 id: addTagField
                                 placeholderText: "Add tag..."
                                 Layout.fillWidth: true
-                                onAccepted: addTag(text)
+                                onAccepted: {m.addTag(text); clear()}
                             }
 
                             IconToolButton {
                                 id: addButton
                                 iconName: "add"
                                 ToolTip.text: "Add tag"
-                                onClicked: addTag(addTagField.text)
+                                onClicked: {m.addTag(addTagField.text); addTagField.clear()}
                             }
                         }
                     }
@@ -140,34 +138,71 @@ Window {
                     title: "Weight / Volume Conversion"
                     Layout.fillWidth: true
 
-                    GridLayout {
+                    ColumnLayout {
                         anchors.fill: parent
-                        columns: 3
-
-                        Label {text: "Weight"}
-                        Label {}
-                        Label {text: "Volume"}
-
-                        DoubleTextField {}
-                        Label {text: "="}
-                        DoubleTextField {}
-
-                        ComboBox {
+                        Frame {
                             Layout.fillWidth: true
-                            textRole: "symbol"
-                            displayText: model[currentIndex].symbol
-                            model: windowModel.weights
-                            Material.elevation: 0
-                            flat: true
+                            Label {
+                                anchors.fill: parent
+                                text: ("<b>Current:</b> %1 Kg/Cup").arg(m.kgPCup)
+                            }
                         }
-                        Label {}
-                        ComboBox {
+
+                        GridLayout {
+                            columns: 4
+                            rowSpacing: 0
                             Layout.fillWidth: true
-                            textRole: "symbol"
-                            displayText: model[currentIndex].symbol
-                            model: windowModel.volumes
-                            Material.elevation: 0
-                            flat: true
+
+                            DoubleTextField {
+                                id: weight_value_input
+                                placeholderText: "Weight"
+                                Layout.fillWidth: true
+                            }
+                            Label {
+                                text: "<h1>  =  </h1>"
+                                Layout.minimumWidth: 30
+                                horizontalAlignment: Label.AlignHCenter
+                                Layout.rowSpan: 2
+                            }
+                            DoubleTextField {
+                                id: volume_value_input
+                                placeholderText: "Volume"
+                                Layout.fillWidth: true
+                            }
+                            IconToolButton {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                Layout.rowSpan: 2
+                                iconName: "refresh"
+                                ToolTip.text: "Change conversion"
+                                enabled: parseFloat(weight_value_input.text) >= 0 &&
+                                         parseFloat(volume_value_input.text) >= 0
+                                onClicked: {
+                                    m.changeConversion(
+                                                weight_value_input.text,
+                                                weight_unit_input.currentIndex,
+                                                volume_value_input.text,
+                                                volume_unit_input.currentIndex)
+                                    weight_value_input.clear()
+                                    volume_value_input.clear()
+                                }
+                            }
+                            ComboBox {
+                                id: weight_unit_input
+                                Layout.fillWidth: true
+                                textRole: "symbol"
+                                displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
+                                model: m.weights
+                                Material.elevation: 0
+                            }
+                            ComboBox {
+                                id: volume_unit_input
+                                Layout.fillWidth: true
+                                textRole: "symbol"
+                                displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
+                                model: m.volumes
+                                Material.elevation: 0
+                            }
                         }
                     }
                 }
@@ -176,15 +211,7 @@ Window {
     }
 
     function open(model) {
-        if (model === undefined) {
-            thisWindow.editMode = false
-            return
-        }
-        thisWindow.editMode = true
-        m_name = model.name
-        m_description = model.description
-        m_tags = model.tags
-        m_kg_per_cup = model.kg_per_cup
+        m.linkUp(model.name, NetworkManager, MeasurementsModel, IngredientsModel)
 
         if (thisWindow.visible === true) {
             thisWindow.raise()
@@ -192,39 +219,22 @@ Window {
         thisWindow.show()
     }
 
-    function removeTag(str) {
-        for (var i = 0; i < m_tags.length; i++) {
-            if (m_tags[i] === str) m_tags.splice(i, 1)
-        }
-        m_tags.sort()
-        tagsView.model = m_tags
-        tagsView.update()
-        console.log("CHANGED: tags:", m_tags)
-    }
-
-    function addTag(str) {
-        addTagField.clear()
-        str = str.trim().toLowerCase()
-        if (str === "") return
-        for (var i = 0; i < m_tags.length; i++) {
-            if (m_tags[i] === str) return
-        }
-        m_tags.push(str)
-        m_tags.sort()
-        tagsView.model = m_tags
-        tagsView.update()
-        console.log("CHANGED: tags:", m_tags)
-    }
-
-    onM_nameChanged: console.log("CHANGED: name:", m_name)
-    onM_descriptionChanged: console.log("CHANGED: description:", m_description)
-
-    onClosing: {
-        thisWindow.destroy()
-    }
+    onClosing: thisWindow.destroy()
 
     IngredientEditWindowModel {
-        id: windowModel
-        Component.onCompleted: linkUp(NetworkManager, MeasurementsModel, IngredientsModel)
+        id: m
+        name: name_input.text
+        desc: desc_input.text
+
+        onQmlUpdateNeeded: {
+            name_input.text = name
+            name = Qt.binding(function() {return name_input.text})
+
+            desc_input.text = desc
+            desc = Qt.binding(function() {return desc_input.text})
+        }
+
+        onEditModeChanged: console.log("editMode:", editMode)
     }
+
 }

@@ -16,6 +16,7 @@ ToolButton {
         id: icon
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
+        opacity: parent.enabled ? 1 : 0.2
     }
 
 }

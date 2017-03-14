@@ -1,16 +1,14 @@
 #include "networkmanager.h"
 
 NetworkManager::NetworkManager(QString url, QString token, QObject *parent) :
-    QObject(parent), m_url(QUrl(url)), m_token(token)
-{
+    QObject(parent), m_url(QUrl(url)), m_token(token) {
     nm = new QNetworkAccessManager(this);
 
     connect(nm, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(handleReply(QNetworkReply*)));
 }
 
-void NetworkManager::handleRequest(QString cmd, QJsonValue v)
-{
+void NetworkManager::handleRequest(QString cmd, QJsonValue v) {
     if (m_cmds.add(cmd) == false) return;
 
     QNetworkRequest nReq;
@@ -25,8 +23,7 @@ void NetworkManager::handleRequest(QString cmd, QJsonValue v)
     nm->post(nReq, QJsonDocument(obj).toJson());
 }
 
-void NetworkManager::handleReply(QNetworkReply* reply)
-{
+void NetworkManager::handleReply(QNetworkReply* reply) {
     QJsonObject obj = QJsonDocument::fromJson(reply->readAll()).object();
     reply->deleteLater();
 
@@ -41,17 +38,16 @@ void NetworkManager::handleReply(QNetworkReply* reply)
     if (cmd == QString("")) return;
     else if (cmd == QString(CMD_GET_MEASUREMENTS)) process_measurements(v);
     else if (cmd == QString(CMD_GET_ALL_INGREDIENTS)) process_get_all_ingredients(v);
+    else if (cmd == QString(CMD_GET_INGREDIENT_OF_KEY)) process_get_ingredient_of_key(v);
 }
 
 /* COMMAND : GET_MEASUREMENTS */
 
-void NetworkManager::get_measurements()
-{
+void NetworkManager::get_measurements() {
     this->handleRequest(CMD_GET_MEASUREMENTS, 0);
 }
 
-void NetworkManager::process_measurements(QJsonValue v)
-{
+void NetworkManager::process_measurements(QJsonValue v) {
     QList<DSMeasurement> mArray;
     auto dataArray = v.toArray();
     qDebug() << "::: MEASUREMENTS >>>";
@@ -71,13 +67,11 @@ void NetworkManager::process_measurements(QJsonValue v)
 
 /* COMMAND : GET_ALL_INGREDIENTS */
 
-void NetworkManager::get_all_ingredients()
-{
+void NetworkManager::get_all_ingredients() {
     this->handleRequest(CMD_GET_ALL_INGREDIENTS, 0);
 }
 
-void NetworkManager::process_get_all_ingredients(QJsonValue v)
-{
+void NetworkManager::process_get_all_ingredients(QJsonValue v) {
     QList<DSIngredient> vArray;
     auto dataArray = v.toArray();
     qDebug() << "::: INGREDIENTS >>>";
@@ -96,4 +90,26 @@ void NetworkManager::process_get_all_ingredients(QJsonValue v)
     }
     qDebug() << "";
     emit recieved_get_all_ingredients(vArray);
+}
+
+/* COMMAND : GET_INGREDIENT_OF_KEY */
+
+void NetworkManager::get_ingredient_of_key(QString key) {
+    this->handleRequest(CMD_GET_INGREDIENT_OF_KEY, key);
+}
+
+void NetworkManager::process_get_ingredient_of_key(QJsonValue v) {
+    auto d = v.toObject();
+    {
+        DSIngredient v;
+        v.name = d["name"].toString();
+        v.description = d["description"].toString();
+        v.kg_per_cup = d["kg_per_cup"].toDouble();
+        QJsonArray tags = d["tags"].toArray();
+        for (int j = 0; j < tags.size(); j++) {
+            v.tags.append(tags.at(j).toString());
+        }
+        qDebug() << "[GOT INGREDIENT]" << v.name << v.tags << v.kg_per_cup << v.description;
+        emit recieved_get_ingredient_of_key(v);
+    }
 }

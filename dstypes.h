@@ -5,6 +5,7 @@
 
 #define CMD_GET_MEASUREMENTS "get_measurements"
 #define CMD_GET_ALL_INGREDIENTS "get_all_ingredients"
+#define CMD_GET_INGREDIENT_OF_KEY "get_ingredient_of_key"
 
 #define TYPE_WEIGHT "weight"
 #define TYPE_VOLUME "volume"
@@ -48,8 +49,6 @@ public:
     void setType(const QString &v) {if (v == m.type) return; m.type = v; emit typeChanged();}
     void setMultiply(const double &v) {if (v == m.multiply) return; m.multiply = v; emit multiplyChanged();}
 
-    void setM(DSMeasurement v) {m = v; emit nameChanged(); emit symbolChanged(); emit typeChanged(); emit multiplyChanged();}
-
 private:
     DSMeasurement m;
 
@@ -58,6 +57,10 @@ signals:
     void symbolChanged();
     void typeChanged();
     void multiplyChanged();
+
+public slots:
+    void setM(DSMeasurement v) {m = v; emit nameChanged(); emit symbolChanged(); emit typeChanged(); emit multiplyChanged();}
+
 };
 
 class Ingredient : public QObject {
@@ -80,8 +83,6 @@ public:
     void setKgPCup(const double &v) {if (v == m.kg_per_cup) return; m.kg_per_cup = v; emit kgPCupChanged();}
     void setTags(const QStringList &v) {if (v == m.tags) return; m.tags = v; emit tagsChanged();}
 
-    void setM(DSIngredient v) {m = v; emit nameChanged(); emit descChanged(); emit kgPCupChanged(); emit tagsChanged();}
-
 private:
     DSIngredient m;
 
@@ -90,6 +91,10 @@ signals:
     void descChanged();
     void kgPCupChanged();
     void tagsChanged();
+
+public slots:
+    void setM(DSIngredient v) {m = v; emit nameChanged(); emit descChanged(); emit kgPCupChanged(); emit tagsChanged();}
+
 };
 
 

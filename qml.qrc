@@ -30,5 +30,10 @@
         <file>components/HeaderLabel.qml</file>
         <file>components/TagItem.qml</file>
         <file>components/DoubleTextField.qml</file>
+        <file>icons/foward.svg</file>
+        <file>icons/tick.svg</file>
+        <file>icons/cancel.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/revert.svg</file>
     </qresource>
 </RCC>

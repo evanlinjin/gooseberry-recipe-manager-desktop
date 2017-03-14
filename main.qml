@@ -64,4 +64,6 @@ ApplicationWindow {
         Qt.createComponent("qrc:/IngredientEditWindow.qml"
                            ).createObject(windowParent).open(model)
     }
+
+    IngredientEditWindow{}
 }

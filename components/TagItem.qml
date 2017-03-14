@@ -5,7 +5,7 @@ import "../"
 
 Frame {
     property alias text: textLabel.text
-    property alias mouseArea: mouseArea
+    property alias xButton: mouseArea
     width: rowed.width + 15
     height: textLabel.height + 10
 
