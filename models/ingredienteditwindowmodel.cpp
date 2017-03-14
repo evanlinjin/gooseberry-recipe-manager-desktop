@@ -66,12 +66,11 @@ void IngredientEditWindowModel::changeConversion(QString wv, int wu, QString vv,
         return;
     }
 
-    qDebug() << "weightValue" << weightValue;
-    qDebug() << "weightMultiply" << weightMultiply;
-    qDebug() << "volumeValue" << volumeValue;
-    qDebug() << "volumeMultiply" << volumeMultiply;
-
     double kgs = (weightValue * weightMultiply) / 1000;
     double cps = (volumeValue * volumeMultiply) / 0.24;
     setKgPCup(kgs/cps);
+}
+
+void IngredientEditWindowModel::revertChanges() {
+    nManager->get_ingredient_of_key(this->name());
 }

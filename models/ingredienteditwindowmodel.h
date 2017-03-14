@@ -45,6 +45,7 @@ public slots:
     void addTag(QString v);
     void removeTag(QString v);
     void changeConversion(QString wv, int wu, QString vv, int vu);
+    void revertChanges();
 
 private slots:
 };

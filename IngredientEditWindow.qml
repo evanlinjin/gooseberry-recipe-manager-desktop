@@ -25,7 +25,7 @@ Window {
                 spacing: 0
 
                 IconToolButton {
-                    iconName: "cancel"
+                    iconName: "back"
                     ToolTip.text: "Cancel"
                     onClicked: thisWindow.close()
                 }
@@ -35,9 +35,15 @@ Window {
                 }
 
                 IconToolButton {
-                    iconName: "tick"
-                    ToolTip.text: "Submit Changes"
+                    iconName: "delete"
+                    ToolTip.text: "Delete Ingredient"
                     onClicked: thisWindow.close()
+                }
+
+                IconToolButton {
+                    iconName: "revert"
+                    ToolTip.text: "Revert Changes"
+                    onClicked: m.revertChanges()
                 }
 
                 IconToolButton {
