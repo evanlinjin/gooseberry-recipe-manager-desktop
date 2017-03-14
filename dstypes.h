@@ -6,6 +6,8 @@
 #define CMD_GET_MEASUREMENTS "get_measurements"
 #define CMD_GET_ALL_INGREDIENTS "get_all_ingredients"
 #define CMD_GET_INGREDIENT_OF_KEY "get_ingredient_of_key"
+#define CMD_MODIFY_INGREDIENT "modify_ingredient"
+#define CMD_ADD_INGREDIENT "add_ingredient"
 
 #define TYPE_WEIGHT "weight"
 #define TYPE_VOLUME "volume"
@@ -60,7 +62,7 @@ signals:
 
 public slots:
     void setM(DSMeasurement v) {m = v; emit nameChanged(); emit symbolChanged(); emit typeChanged(); emit multiplyChanged();}
-
+    DSMeasurement getM() {return m;}
 };
 
 class Ingredient : public QObject {
@@ -94,7 +96,7 @@ signals:
 
 public slots:
     void setM(DSIngredient v) {m = v; emit nameChanged(); emit descChanged(); emit kgPCupChanged(); emit tagsChanged();}
-
+    DSIngredient getM() {return m;}
 };
 
 

@@ -36,9 +36,16 @@ void NetworkManager::handleReply(QNetworkReply* reply) {
     if (status == QString(STATUS_ERROR)) emit recieved_error(cmd, v.toString());
 
     if (cmd == QString("")) return;
-    else if (cmd == QString(CMD_GET_MEASUREMENTS)) process_measurements(v);
-    else if (cmd == QString(CMD_GET_ALL_INGREDIENTS)) process_get_all_ingredients(v);
-    else if (cmd == QString(CMD_GET_INGREDIENT_OF_KEY)) process_get_ingredient_of_key(v);
+    else if (cmd == QString(CMD_GET_MEASUREMENTS))
+        process_measurements(v);
+    else if (cmd == QString(CMD_GET_ALL_INGREDIENTS))
+        process_get_all_ingredients(v);
+    else if (cmd == QString(CMD_GET_INGREDIENT_OF_KEY))
+        process_get_ingredient_of_key(v);
+    else if (cmd == QString(CMD_MODIFY_INGREDIENT))
+        process_modify_ingredient(v);
+    else if (cmd == QString(CMD_ADD_INGREDIENT))
+        process_add_ingredient(v);
 }
 
 /* COMMAND : GET_MEASUREMENTS */
@@ -111,5 +118,67 @@ void NetworkManager::process_get_ingredient_of_key(QJsonValue v) {
         }
         qDebug() << "[GOT INGREDIENT]" << v.name << v.tags << v.kg_per_cup << v.description;
         emit recieved_get_ingredient_of_key(v);
+    }
+}
+
+/* COMMAND : MODIFY_INGREDIENT */
+
+void NetworkManager::modify_ingredient(DSIngredient v) {
+    QJsonObject obj;
+    obj["name"] = v.name;
+    obj["description"] = v.description;
+    obj["kg_per_cup"] = v.kg_per_cup;
+    QJsonArray tags;
+    for (int i = 0; i < v.tags.size(); i++) {
+        tags.append(v.tags.at(i));
+    }
+    obj["tags"] = tags;
+    this->handleRequest(CMD_MODIFY_INGREDIENT, obj);
+}
+
+void NetworkManager::process_modify_ingredient(QJsonValue v) {
+    auto d = v.toObject();
+    {
+        DSIngredient v;
+        v.name = d["name"].toString();
+        v.description = d["description"].toString();
+        v.kg_per_cup = d["kg_per_cup"].toDouble();
+        QJsonArray tags = d["tags"].toArray();
+        for (int j = 0; j < tags.size(); j++) {
+            v.tags.append(tags.at(j).toString());
+        }
+        qDebug() << "[GOT INGREDIENT]" << v.name << v.tags << v.kg_per_cup << v.description;
+        emit recieved_modify_ingredient(v);
+    }
+}
+
+/* COMMAND : ADD_INGREDIENT */
+
+void NetworkManager::add_ingredient(DSIngredient v) {
+    QJsonObject obj;
+    obj["name"] = v.name;
+    obj["description"] = v.description;
+    obj["kg_per_cup"] = v.kg_per_cup;
+    QJsonArray tags;
+    for (int i = 0; i < v.tags.size(); i++) {
+        tags.append(v.tags.at(i));
+    }
+    obj["tags"] = tags;
+    this->handleRequest(CMD_ADD_INGREDIENT, obj);
+}
+
+void NetworkManager::process_add_ingredient(QJsonValue v) {
+    auto d = v.toObject();
+    {
+        DSIngredient v;
+        v.name = d["name"].toString();
+        v.description = d["description"].toString();
+        v.kg_per_cup = d["kg_per_cup"].toDouble();
+        QJsonArray tags = d["tags"].toArray();
+        for (int j = 0; j < tags.size(); j++) {
+            v.tags.append(tags.at(j).toString());
+        }
+        qDebug() << "[GOT INGREDIENT]" << v.name << v.tags << v.kg_per_cup << v.description;
+        emit recieved_add_ingredient(v);
     }
 }

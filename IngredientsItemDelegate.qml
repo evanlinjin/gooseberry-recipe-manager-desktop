@@ -26,7 +26,8 @@ ItemDelegate {
 
         ToolTip.visible: hovered
         ToolTip.text: "Edit entry"
-        onClicked: openIngredientEditWindow(this, model)
+
+        onClicked: openIngredientEditWindow(this, name)
     }
 
     ToolTip.visible: hovered

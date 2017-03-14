@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import "../"
 
 Frame {
+    id: frame
     property alias text: textLabel.text
     property alias xButton: mouseArea
     width: rowed.width + 15
@@ -23,6 +24,7 @@ Frame {
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
+                enabled: frame.enabled
             }
         }
     }

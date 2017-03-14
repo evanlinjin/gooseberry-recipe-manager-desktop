@@ -39,6 +39,7 @@ ApplicationWindow {
             delegate: IngredientsItemDelegate{}
 
             reloadTrigger: IngredientsModel.reload
+            addTrigger: openIngredientEditWindow
         }
     }
 

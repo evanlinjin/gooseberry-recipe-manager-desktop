@@ -1,7 +1,7 @@
 #include "ingredienteditwindowmodel.h"
 
 IngredientEditWindowModel::IngredientEditWindowModel(QObject *parent) :
-    Ingredient(parent), m_editMode(true) {
+    Ingredient(parent), m_editMode(true), m_ready(false) {
 }
 
 QObject* IngredientEditWindowModel::getVolumesObj(int i) {
@@ -24,12 +24,17 @@ void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, Measurem
     this->m_weights = mm->getWeightMeasurements(); emit weightsChanged();
 
     this->m_editMode = (key != QString("")); emit editModeChanged();
-    if (!m_editMode) return;
+    if (!m_editMode) {
+        setReady();
+        return;
+    }
 
     connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient)),
             this, SLOT(setM(DSIngredient)));
     connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient)),
             this, SIGNAL(qmlUpdateNeeded()));
+    connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient)),
+            this, SLOT(setReady()));
 
     nm->get_ingredient_of_key(key);
 }
@@ -72,5 +77,14 @@ void IngredientEditWindowModel::changeConversion(QString wv, int wu, QString vv,
 }
 
 void IngredientEditWindowModel::revertChanges() {
+    setNotReady();
     nManager->get_ingredient_of_key(this->name());
+}
+
+void IngredientEditWindowModel::submitChanges() {
+    if (editMode()) {
+        nManager->modify_ingredient(this->getM());
+    } else {
+        nManager->add_ingredient(this->getM());
+    }
 }
