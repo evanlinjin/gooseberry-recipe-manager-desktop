@@ -9,24 +9,39 @@ import "../"
 Page{
     header: ToolBar {
         Material.elevation: 1
-        ColumnLayout {
-//            anchors.centerIn: parent
-//            width: parent.width - 20
+        RowLayout {
             anchors.fill: parent
-            anchors.margins: 10
-            spacing: 0
-            HeaderLabel {
-                id: ingredientName
-                text: "Recipe Manager"
-                visible: !rightPaneOpen
+
+            IconToolButton {
+                id: closeButton
+                iconName: "back"
+                onClicked: drawer.close()
+                visible: !showLeftToolbar
+                Layout.fillHeight: true
+                ToolTip.text: "Back"
             }
-            HeaderLabel {
-                text: "Menu"
-                opacity: 0.7
-                font.pixelSize: ingredientName.font.pixelSize*4/5
-                horizontalAlignment: rightPaneOpen ? Label.AlignHCenter : Label.AlignLeft
+
+            Item {height: 5; width: 5; visible: !closeButton.visible}
+
+            ColumnLayout {
+                spacing: 0
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                HeaderLabel {
+                    id: ingredientName
+                    text: "Recipe Manager"
+                    visible: !rightPaneOpen
+                }
+                HeaderLabel {
+                    text: "Menu"
+                    opacity: 0.7
+                    font.pixelSize: ingredientName.font.pixelSize*4/5
+                    horizontalAlignment: rightPaneOpen ? Label.AlignHCenter : Label.AlignLeft
+                }
             }
         }
+
+
     }
     ListView {
         anchors.fill: parent

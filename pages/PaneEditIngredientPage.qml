@@ -49,16 +49,16 @@ Page {
                 enabled: m.editMode
             }
 
-//            IconToolButton {
-//                iconName: "tick"
-//                ToolTip.text: "Submit Changes"
-//                onClicked: {m.submitChanges()}
-//            }
-//            ToolButton {
-//                text: "Delete"
-//                onClicked: m.deleteIngredient()
-//                enabled: m.editMode
-//            }
+            //            IconToolButton {
+            //                iconName: "tick"
+            //                ToolTip.text: "Submit Changes"
+            //                onClicked: {m.submitChanges()}
+            //            }
+            //            ToolButton {
+            //                text: "Delete"
+            //                onClicked: m.deleteIngredient()
+            //                enabled: m.editMode
+            //            }
 
             ToolButton {
                 text: "Save"
@@ -90,181 +90,201 @@ Page {
 
             flow: GridLayout.TopToBottom
 
-            Pane {
+            DynamicFrame {
                 id: nameGroup
-                Layout.fillWidth: true
+                showFrame: false//layoutFields.rows == 2
                 Layout.maximumWidth: parent.maxWidth1
-                Layout.minimumHeight: conversionGroup.height
-                Material.elevation: 1
-
-                ColumnLayout {
-                    anchors.fill: parent
-
-                    TitleTextField {
-                        id: name_input
-                        placeholderText: "Name"
-                        enabled: !m.editMode
-                    }
-
-                    TextArea {
-                        id: desc_input
-                        placeholderText: "Enter description"
-                        Layout.fillWidth: true
-                        wrapMode: TextArea.Wrap
-                    }
-                }
+                //                Layout.minimumHeight: conversionGroup.height
+                content: nameGroupComponent
             }
 
-            Pane {
+            DynamicFrame {
+                id: tagsGroup
+                showFrame: nameGroup.showFrame
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.maxWidth1
-                Material.elevation: 1
-
-                ColumnLayout {
-                    anchors.fill: parent
-
-                    Item {
-                        height: 2.5
-                        Layout.fillWidth: true
-                    }
-
-                    ListView {
-                        id: tagsView
-                        Layout.fillWidth: true
-                        height: contentHeight
-                        width: parent.width
-                        contentHeight: 40
-                        spacing: 10
-                        orientation: ListView.Horizontal
-                        clip: true
-                        model: m.tags
-                        delegate: TagItem {
-                            text: modelData
-                            xButton.onClicked: m.removeTag(modelData)
-                        }
-                        ScrollBar.horizontal: ScrollBar {}
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-
-                        TextField {
-                            id: addTagField
-                            placeholderText: "Add tag..."
-                            Layout.fillWidth: true
-                            validator: RegExpValidator {regExp: /^[a-z]+$/}
-                            onAccepted: {m.addTag(text); clear()}
-                        }
-
-                        RoundButton {
-                            id: addButton
-                            Icon {
-                                name: "add"
-                                anchors.centerIn: parent
-                                overlay: true
-//                                color: Material.primary
-                            }
-                            flat: true
-                            ToolTip.text: "Add tag"
-                            onClicked: {m.addTag(addTagField.text); addTagField.clear()}
-                        }
-                    }
-                }
+                content: tagsGroupComponent
             }
 
-            Pane {
+            DynamicFrame {
                 id: conversionGroup
+                showFrame: nameGroup.showFrame
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.maxWidth2
-                Material.elevation: 1
+                content: conversionGroupComponent
+            }
+        }
+    }
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    Frame {
-                        Layout.fillWidth: true
-//                        Material.elevation: 1
-                        Label {
-                            anchors.fill: parent
-                            text: ("<b>Current: </b> %1 kg/cup").arg(m.kgPCup)
-                        }
-                    }
+    Component {
+        id: nameGroupComponent
+        ColumnLayout {
+            property alias nameInput: name_input.text
+            property alias descInput: desc_input.text
 
-                    GridLayout {
-                        columns: 4
-                        rowSpacing: 0
-                        Layout.fillWidth: true
+            Label {text: "Name"; font.bold: true;}
 
-                        DoubleTextField {
-                            id: weight_value_input
-                            placeholderText: "Weight"
-                            Layout.fillWidth: true
-                        }
-                        Label {
-                            text: "<h1>  =  </h1>"
-                            Layout.minimumWidth: 30
-                            horizontalAlignment: Label.AlignHCenter
-                            Layout.rowSpan: 2
-                        }
-                        DoubleTextField {
-                            id: volume_value_input
-                            placeholderText: "Volume"
-                            Layout.fillWidth: true
-                        }
-                        RoundButton {
-                            Layout.rowSpan: 2
-                            Icon {
-                                name: "foward"
-                                anchors.centerIn: parent
-                                overlay: true
-//                                color: Material.primary
-                            }
-                            flat: true
-                            ToolTip.text: "Submit new conversion"
-                            enabled: parseFloat(weight_value_input.text) >= 0 &&
-                                     parseFloat(volume_value_input.text) >= 0
-                            onClicked: {
-                                m.changeConversion(
-                                            weight_value_input.text,
-                                            weight_unit_input.currentIndex,
-                                            volume_value_input.text,
-                                            volume_unit_input.currentIndex)
-                                weight_value_input.clear()
-                                volume_value_input.clear()
-                            }
-                        }
-                        ComboBox {
-                            id: weight_unit_input
-                            Layout.fillWidth: true
-                            textRole: "symbol"
-                            displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
-                            model: m.weights
-                            Material.elevation: 1
-                        }
-                        ComboBox {
-                            id: volume_unit_input
-                            Layout.fillWidth: true
-                            textRole: "symbol"
-                            displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
-                            model: m.volumes
-                            Material.elevation: 1
-                        }
-                    }
+            TitleTextField {
+                id: name_input
+                placeholderText: "Name"
+                enabled: !m.editMode
+            }
+
+            Label {text: "\nDescription"; font.bold: true;}
+
+            TextArea {
+                id: desc_input
+                placeholderText: "Enter description"
+                Layout.fillWidth: true
+                wrapMode: TextArea.Wrap
+            }
+        }
+    }
+
+    Component {
+        id: tagsGroupComponent
+        ColumnLayout {
+            Label {text: "Tags\n"; font.bold: true}
+
+            ListView {
+                id: tagsView
+                Layout.fillWidth: true
+                height: contentHeight
+                width: parent.width
+                contentHeight: 40
+                spacing: 10
+                orientation: ListView.Horizontal
+                clip: true
+                model: m.tags
+                delegate: TagItem {
+                    text: modelData
+                    xButton.onClicked: m.removeTag(modelData)
                 }
+                ScrollBar.horizontal: ScrollBar {}
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                TextField {
+                    id: addTagField
+                    placeholderText: "Add tag..."
+                    Layout.fillWidth: true
+                    validator: RegExpValidator {regExp: /^[a-z]+$/}
+                    onAccepted: {m.addTag(text); clear()}
+                }
+
+                IconToolButton {
+                    id: addButton
+                    iconName: "add"
+                    iconColor: Material.primary
+                    ToolTip.text: "Add tag"
+                    onClicked: {m.addTag(addTagField.text); addTagField.clear()}
+                }
+            }
+        }
+    }
+
+    Component {
+        id: conversionGroupComponent
+        ColumnLayout {
+            Label {text: "Conversions\n"; font.bold: true}
+
+            GridLayout {
+                Layout.fillWidth: true
+                Layout.maximumWidth: 330
+                columns: 3
+                Label {text: "Weight/Volume:"; /*font.bold: true; */Layout.fillWidth: true}
+                Label {text: ("%1 kg/cup").arg(m.kgPCup); Layout.fillWidth: true}
+                IconToolButton {iconName: "edit"; onClicked: conversionDialog.open()}
+            }
+        }
+    }
+
+    Dialog {
+        id: conversionDialog
+        //        height: parent.height
+        //        width: parent.width
+        x: parent.width/2 - width/2
+        y: parent.height/3 - width/3
+        modal: true
+        onRejected: close()
+        onAccepted: {
+            m.changeConversion(
+                        weight_value_input.text,
+                        weight_unit_input.currentIndex,
+                        volume_value_input.text,
+                        volume_unit_input.currentIndex)
+            weight_value_input.clear()
+            volume_value_input.clear()
+        }
+        footer: DialogButtonBox {
+            Button {
+                text: qsTr("Cancel")
+                DialogButtonBox.buttonRole: DialogButtonBox.DestructiveRole
+                flat: true
+                onClicked: conversionDialog.close()
+            }
+            Button {
+                text: qsTr("Change conversion")
+                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
+                enabled: parseFloat(weight_value_input.text) >= 0 &&
+                         parseFloat(volume_value_input.text) >= 0
+                flat: true
+            }
+        }
+
+        GridLayout {
+            id: dialogGrid
+            columns: 3
+            rowSpacing: 0
+            Layout.fillWidth: true
+
+            DoubleTextField {
+                id: weight_value_input
+                placeholderText: "Weight"
+                Layout.fillWidth: true
+            }
+            Label {
+                text: "<h1>  =  </h1>"
+                Layout.minimumWidth: 30
+                horizontalAlignment: Label.AlignHCenter
+                Layout.rowSpan: 2
+            }
+            DoubleTextField {
+                id: volume_value_input
+                placeholderText: "Volume"
+                Layout.fillWidth: true
+            }
+            ComboBox {
+                id: weight_unit_input
+                Layout.fillWidth: true
+                textRole: "symbol"
+                displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
+                model: m.weights
+                Material.elevation: 1
+            }
+            ComboBox {
+                id: volume_unit_input
+                Layout.fillWidth: true
+                textRole: "symbol"
+                displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
+                model: m.volumes
+                Material.elevation: 1
             }
         }
     }
 
     IngredientEditWindowModel {
         id: m
-        name: name_input.text
-        desc: desc_input.text
-
+        name: nameGroup.item.nameInput
+        desc: nameGroup.item.descInput
         onQmlUpdateNeeded: {
-            name_input.text = name
-            name = Qt.binding(function() {return name_input.text})
+            nameGroup.item.nameInput = name
+            name = Qt.binding(function() {return nameGroup.item.nameInput})
 
-            desc_input.text = desc
-            desc = Qt.binding(function() {return desc_input.text})
+            nameGroup.item.descInput = desc
+            desc = Qt.binding(function() {return nameGroup.item.descInput})
         }
     }
 

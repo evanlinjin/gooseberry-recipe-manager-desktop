@@ -61,11 +61,11 @@ ApplicationWindow {
 
     Drawer {
         id: drawer
-        width: showLeftToolbar ? 0 : mainWindow.width * 0.7
+        width: showLeftToolbar ? 0 : (leftToolbarMaxWidth*1.5 > mainWindow.width ? mainWindow.width : leftToolbarMaxWidth*1.5)
         height: showLeftToolbar ? 0 : mainWindow.height
         Loader {
             anchors.fill: parent
-            sourceComponent: leftToolbarPane
+            sourceComponent: showLeftToolbar ? undefined : leftToolbarPane
         }
     }
 
