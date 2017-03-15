@@ -35,6 +35,7 @@ signals:
     void recieved_get_ingredient_of_key(DSIngredient, QString id);
     void recieved_modify_ingredient(DSIngredient, QString id);
     void recieved_add_ingredient(DSIngredient, QString id);
+    void recieved_delete_ingredient(QString, QString);
 
 public slots:
     void get_measurements(QString id);
@@ -42,6 +43,7 @@ public slots:
     void get_ingredient_of_key(QString key, QString id);
     void modify_ingredient(DSIngredient v, QString id);
     void add_ingredient(DSIngredient v, QString id);
+    void delete_ingredient(QString v, QString id);
 
 private slots:
     void process_measurements(QJsonValue v, QString id);
@@ -49,6 +51,7 @@ private slots:
     void process_get_ingredient_of_key(QJsonValue v, QString id);
     void process_modify_ingredient(QJsonValue v, QString id);
     void process_add_ingredient(QJsonValue v, QString id);
+    void process_delete_ingredient(QJsonValue v, QString id);
 
     void handleRequest(QString cmd, QJsonValue v, QString id);
     void handleReply(QNetworkReply* reply);

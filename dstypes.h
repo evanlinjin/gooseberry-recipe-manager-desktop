@@ -8,6 +8,7 @@
 #define CMD_GET_INGREDIENT_OF_KEY "get_ingredient_of_key"
 #define CMD_MODIFY_INGREDIENT "modify_ingredient"
 #define CMD_ADD_INGREDIENT "add_ingredient"
+#define CMD_DELETE_INGREDIENT "delete_ingredient"
 
 #define TYPE_WEIGHT "weight"
 #define TYPE_VOLUME "volume"

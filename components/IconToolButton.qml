@@ -5,6 +5,7 @@ import "../"
 
 ToolButton {
     property alias iconName: icon.name
+    property alias iconColor: icon.color
     ToolTip.text: ""
     onClicked: {}
 

@@ -33,13 +33,16 @@ void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, Measurem
     connections.clear();
 
     connections << connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient,QString)),
-            this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
+                           this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
 
     connections << connect(nm, SIGNAL(recieved_add_ingredient(DSIngredient,QString)),
-            this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
+                           this, SLOT(process_add_ingredient_reply(DSIngredient,QString)));
 
     connections << connect(nm, SIGNAL(recieved_modify_ingredient(DSIngredient,QString)),
-            this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
+                           this, SLOT(process_modify_ingredient_reply(DSIngredient,QString)));
+
+    connections << connect(nm, SIGNAL(recieved_delete_ingredient(QString,QString)),
+                           this, SLOT(process_delete_ingredient_reply(QString,QString)));
 
     nm->get_ingredient_of_key(key, get_nid());
 }
@@ -82,20 +85,41 @@ void IngredientEditWindowModel::changeConversion(QString wv, int wu, QString vv,
 }
 
 void IngredientEditWindowModel::process_get_ingredient_of_key_reply(DSIngredient v, QString id) {
-    qDebug() << "[IngredientEditWindowModel::process_get_ingredient_of_key_reply] ID:"
-             << id << "NID:" << get_nid();
     if (id != get_nid()) return;
-
     this->setM(v);
-    this->m_editMode = (v.name != QString(""));
-    emit editModeChanged();
     emit qmlUpdateNeeded();
     this->setReady();
+}
+
+void IngredientEditWindowModel::process_add_ingredient_reply(DSIngredient v, QString id) {
+    if (id != get_nid()) return;
+    this->setM(v);
+    this->m_editMode = (v.name != QString("")); emit editModeChanged();
+    this->setReady(); emit qmlUpdateNeeded();
+}
+
+void IngredientEditWindowModel::process_modify_ingredient_reply(DSIngredient v, QString id) {
+    if (id != get_nid()) return;
+    this->setM(v);
+    this->setReady(); emit qmlUpdateNeeded();
+}
+
+void IngredientEditWindowModel::process_delete_ingredient_reply(QString v, QString id) {
+    if (id != get_nid()) return;
+    DSIngredient newM; newM.kg_per_cup = 0; this->setM(newM);
+    this->m_editMode = false; emit editModeChanged();
+    this->setReady(); emit qmlUpdateNeeded();
+    qDebug() << "Deleted Ingredient:" << v;
 }
 
 void IngredientEditWindowModel::reloadMeasurements() {
     this->m_volumes = mModel->getVolumeMeasurements(); emit volumesChanged();
     this->m_weights = mModel->getWeightMeasurements(); emit weightsChanged();
+}
+
+void IngredientEditWindowModel::deleteIngredient() {
+    setNotReady();
+    nManager->delete_ingredient(this->name(), get_nid());
 }
 
 void IngredientEditWindowModel::revertChanges() {

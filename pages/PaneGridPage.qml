@@ -24,14 +24,15 @@ Page {
         Material.elevation: 1
         RowLayout {
             anchors.centerIn: parent
+//            anchors.horizontalCenterOffset: parent.width < maxWidth ? spacing
             height: parent.height
-            width: parent.width < maxWidth ? parent.width : maxWidth
-            spacing: 0
+            width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
+
             IconToolButton {
                 id: menuButton
                 iconName: "contents"
                 ToolTip.text: "Menu "
-                enabled: !showLeftToolbar
+                visible: !showLeftToolbar
                 onClicked: drawer.open()
             }
             HeaderLabel {
@@ -66,7 +67,7 @@ Page {
             color: Material.background
         }
         highlighted: true
-        Material.accent: Material.primary
+        Material.accent: Material.Green
         ToolTip.text: "Add " + handleType
         ToolTip.visible: hovered
         onClicked: addTrigger()
@@ -88,7 +89,10 @@ Page {
             anchors.rightMargin: -((panePage.width - listView.width)/2)
         }
         populate: Transition {
-            NumberAnimation { properties: "y"; duration: 260 }
+            NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
+        }
+        add: Transition {
+            NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
         }
     }
 }

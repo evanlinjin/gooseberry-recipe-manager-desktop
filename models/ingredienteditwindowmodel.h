@@ -54,14 +54,18 @@ public slots:
     void addTag(QString v);
     void removeTag(QString v);
     void changeConversion(QString wv, int wu, QString vv, int vu);
+
+    void deleteIngredient();
     void revertChanges();
     void submitChanges();
-
 
     void clear();
 
 private slots:
     void process_get_ingredient_of_key_reply(DSIngredient v, QString id);
+    void process_add_ingredient_reply(DSIngredient v, QString id);
+    void process_modify_ingredient_reply(DSIngredient v, QString id);
+    void process_delete_ingredient_reply(QString v, QString id);
     void reloadMeasurements();
 
     void setReady() {m_ready = true; emit readyChanged();}

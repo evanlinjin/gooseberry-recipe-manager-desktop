@@ -22,6 +22,7 @@ ItemDelegate {
         Icon{
             id: icon
             size: parent.height
+            overlay: false
         }
         HeaderLabel {
             id: label

@@ -13,14 +13,15 @@ Page {
         Material.elevation: 1
         RowLayout {
             anchors.centerIn: parent
+//            anchors.horizontalCenterOffset: spacing
             height: parent.height
-            width: parent.width < maxWidth ? parent.width : maxWidth
-            spacing: 0
+            width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
+
             IconToolButton {
                 id: menuButton
                 iconName: "contents"
                 ToolTip.text: "Menu "
-                enabled: !showLeftToolbar
+                visible: !showLeftToolbar
                 onClicked: drawer.open()
             }
             HeaderLabel {
@@ -66,8 +67,10 @@ Page {
 
         model: mainMeasurementsModel
 
-        delegate: ItemDelegate {
+        delegate: Item {
             width: parent.width
+            height: 55
+            Material.elevation: 1
             Row {
                 anchors.centerIn: parent
                 height: parent.height
@@ -78,7 +81,6 @@ Page {
                 MeasurementsLabel {text: multiply}
                 MeasurementsLabel {text: type}
             }
-            enabled: false
         }
 
         ScrollBar.vertical: ScrollBar {
@@ -90,7 +92,10 @@ Page {
         }
 
         populate: Transition {
-            NumberAnimation { properties: "y"; duration: 260 }
+            NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
+        }
+        add: Transition {
+            NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
         }
     }
 

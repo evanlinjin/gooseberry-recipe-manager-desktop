@@ -54,6 +54,8 @@ void NetworkManager::handleReply(QNetworkReply* reply) {
         process_modify_ingredient(v, id);
     else if (cmd == QString(CMD_ADD_INGREDIENT))
         process_add_ingredient(v, id);
+    else if (cmd == QString(CMD_DELETE_INGREDIENT))
+        process_delete_ingredient(v, id);
 }
 
 /* COMMAND : GET_MEASUREMENTS */
@@ -189,4 +191,16 @@ void NetworkManager::process_add_ingredient(QJsonValue v, QString id) {
         qDebug() << "[NetworkManager::process_add_ingredient]" << v.name << v.tags << v.kg_per_cup << v.description;
         emit recieved_add_ingredient(v, id);
     }
+}
+
+/* COMMAND : DELETE_INGREDIENT */
+
+void NetworkManager::delete_ingredient(QString v, QString id) {
+    this->handleRequest(CMD_DELETE_INGREDIENT, v, id);
+}
+
+void NetworkManager::process_delete_ingredient(QJsonValue v, QString id) {
+    auto str = v.toString();
+    qDebug() << "[NetworkManager::process_delete_ingredient]" << str;
+    emit recieved_delete_ingredient(str, id);
 }

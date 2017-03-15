@@ -61,7 +61,7 @@ ApplicationWindow {
 
     Drawer {
         id: drawer
-        width: showLeftToolbar ? 0 : mainWindow.width * 0.6
+        width: showLeftToolbar ? 0 : mainWindow.width * 0.7
         height: showLeftToolbar ? 0 : mainWindow.height
         Loader {
             anchors.fill: parent
@@ -75,7 +75,7 @@ ApplicationWindow {
     Component {id: measurementsPane; PaneMeasurementsPage{} }
 
 
-    MeasurementsWindow{id: measurementsWindow}
+//    MeasurementsWindow{id: measurementsWindow}
 
     MeasurementsModel {
         id: mainMeasurementsModel

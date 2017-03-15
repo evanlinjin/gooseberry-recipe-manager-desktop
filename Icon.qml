@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtGraphicalEffects 1.0
+import QtQuick.Controls.Material 2.1
 
 Item {
     width: image.width
@@ -14,7 +15,8 @@ Item {
         id: image
         width: 22
         height: width
-        smooth: false
+        smooth: true
+//        mipmap: true
         visible: true
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -25,14 +27,14 @@ Item {
             overlay.source = image
         }
         enabled: parent.enabled
-        opacity: enabled ? 1 : 0.7
+        opacity: enabled ? 0.9 : 0.7
     }
 
     ColorOverlay {
         id: overlay
         anchors.fill: image
         source: image
-        color: "white"
+        color: Material.foreground
         visible: false
         enabled: parent.enabled
         opacity: enabled ? 1 : 0.3

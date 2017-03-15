@@ -10,8 +10,11 @@ Page{
     header: ToolBar {
         Material.elevation: 1
         ColumnLayout {
-            anchors.centerIn: parent
-            width: parent.width - 20
+//            anchors.centerIn: parent
+//            width: parent.width - 20
+            anchors.fill: parent
+            anchors.margins: 10
+            spacing: 0
             HeaderLabel {
                 id: ingredientName
                 text: "Recipe Manager"

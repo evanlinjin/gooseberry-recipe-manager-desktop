@@ -22,24 +22,17 @@ Page {
         RowLayout {
             anchors.centerIn: parent
             height: parent.height
-            width: parent.width < maxWidth ? parent.width : maxWidth
-            spacing: 0
+            width: (parent.width < maxWidth ? parent.width : maxWidth)
 
             IconToolButton {
-                iconName: twoPanePossible ? "close" : "back"
+                iconName: /*twoPanePossible ? "close" : */"back"
                 ToolTip.text: twoPanePossible ? "Close" : "Back"
+                ToolTip.visible: hovered
                 onClicked: closeRightPane()
             }
 
             HeaderLabel {
                 text: m.editMode ? m.name : "New Ingredient"
-            }
-
-            IconToolButton {
-                iconName: "delete"
-                ToolTip.text: "Delete Ingredient"
-                onClicked: closeRightPane()
-                enabled: m.editMode
             }
 
             IconToolButton {
@@ -50,10 +43,28 @@ Page {
             }
 
             IconToolButton {
-                iconName: "save"
-                ToolTip.text: "Save Changes"
-                onClicked: {m.submitChanges()}
+                iconName: "delete"
+                ToolTip.text: "Delete Ingredient"
+                onClicked: m.deleteIngredient()
+                enabled: m.editMode
             }
+
+//            IconToolButton {
+//                iconName: "tick"
+//                ToolTip.text: "Submit Changes"
+//                onClicked: {m.submitChanges()}
+//            }
+//            ToolButton {
+//                text: "Delete"
+//                onClicked: m.deleteIngredient()
+//                enabled: m.editMode
+//            }
+
+            ToolButton {
+                text: "Save"
+                onClicked: m.submitChanges()
+            }
+            Item{width: 1; height: 1}
         }
     }
 
@@ -151,7 +162,7 @@ Page {
                                 name: "add"
                                 anchors.centerIn: parent
                                 overlay: true
-                                color: Material.primary
+//                                color: Material.primary
                             }
                             flat: true
                             ToolTip.text: "Add tag"
@@ -169,12 +180,12 @@ Page {
 
                 ColumnLayout {
                     anchors.fill: parent
-                    Pane {
+                    Frame {
                         Layout.fillWidth: true
-                        Material.elevation: 1
+//                        Material.elevation: 1
                         Label {
                             anchors.fill: parent
-                            text: ("<b>Current:</b> %1 Kg/Cup").arg(m.kgPCup)
+                            text: ("<b>Current: </b> %1 kg/cup").arg(m.kgPCup)
                         }
                     }
 
@@ -205,7 +216,7 @@ Page {
                                 name: "foward"
                                 anchors.centerIn: parent
                                 overlay: true
-                                color: Material.primary
+//                                color: Material.primary
                             }
                             flat: true
                             ToolTip.text: "Submit new conversion"

@@ -15,7 +15,7 @@ PaneGridPage {
     model: mainIngredientsModel
     delegate: ingredientDelegate
 
-    cellWidth: 240
+    cellWidth: 210
     cellHeight: 80
 
     reloadTrigger: mainIngredientsModel.reload
