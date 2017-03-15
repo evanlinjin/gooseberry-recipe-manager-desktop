@@ -11,7 +11,6 @@ Page {
     id: page
     anchors.fill: parent
     enabled: m.ready
-//    Material.elevation: 6
 
     BusyIndicator {
         anchors.centerIn: parent
@@ -19,7 +18,7 @@ Page {
     }
 
     header: ToolBar {
-        Material.elevation: 0
+        Material.elevation: 1
         RowLayout {
             anchors.centerIn: parent
             height: parent.height
@@ -27,31 +26,33 @@ Page {
             spacing: 0
 
             IconToolButton {
-                iconName: "close"
-                ToolTip.text: "Cancel"
-                onClicked: page.close()
+                iconName: twoPanePossible ? "close" : "back"
+                ToolTip.text: twoPanePossible ? "Close" : "Back"
+                onClicked: closeRightPane()
             }
 
             HeaderLabel {
-                text: m.name
+                text: m.editMode ? m.name : "New Ingredient"
             }
 
             IconToolButton {
                 iconName: "delete"
                 ToolTip.text: "Delete Ingredient"
-                onClicked: page.close()
+                onClicked: closeRightPane()
+                enabled: m.editMode
             }
 
             IconToolButton {
                 iconName: "revert"
                 ToolTip.text: "Revert Changes"
                 onClicked: m.revertChanges()
+                enabled: m.editMode
             }
 
             IconToolButton {
                 iconName: "save"
                 ToolTip.text: "Save Changes"
-                onClicked: {m.submitChanges(); page.close()}
+                onClicked: {m.submitChanges()}
             }
         }
     }
@@ -229,6 +230,7 @@ Page {
             }
         }
     }
+    Separator{}
 
     IngredientEditWindowModel {
         id: m
@@ -244,7 +246,6 @@ Page {
         }
     }
 
-    signal close()
 
     function open(name) {
         m.linkUp(name, NetworkManager, mainMeasurementsModel, mainIngredientsModel)

@@ -17,6 +17,7 @@ QString IngredientEditWindowModel::get_nid() {
 }
 
 void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, MeasurementsModel *mm, IngredientsModel *im) {
+    this->setNotReady();
     this->nManager = nm; this->mModel = mm; this->iModel = im;
 
     if (nm == nullptr || mm == nullptr || im == nullptr) {
@@ -27,12 +28,14 @@ void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, Measurem
     this->reloadMeasurements();
 
     this->m_editMode = (key != QString("")); emit editModeChanged();
-    if (!m_editMode) {
-        setReady();
-        return;
-    }
 
     connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient,QString)),
+            this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
+
+    connect(nm, SIGNAL(recieved_add_ingredient(DSIngredient,QString)),
+            this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
+
+    connect(nm, SIGNAL(recieved_modify_ingredient(DSIngredient,QString)),
             this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
 
     nm->get_ingredient_of_key(key, get_nid());
@@ -76,8 +79,13 @@ void IngredientEditWindowModel::changeConversion(QString wv, int wu, QString vv,
 }
 
 void IngredientEditWindowModel::process_get_ingredient_of_key_reply(DSIngredient v, QString id) {
+    qDebug() << "[IngredientEditWindowModel::process_get_ingredient_of_key_reply] ID:"
+             << id << "NID:" << get_nid();
     if (id != get_nid()) return;
+
     this->setM(v);
+    this->m_editMode = (v.name != QString(""));
+    emit editModeChanged();
     emit qmlUpdateNeeded();
     this->setReady();
 }
@@ -93,9 +101,18 @@ void IngredientEditWindowModel::revertChanges() {
 }
 
 void IngredientEditWindowModel::submitChanges() {
+    setNotReady();
     if (editMode()) {
         nManager->modify_ingredient(this->getM(), get_nid());
     } else {
         nManager->add_ingredient(this->getM(), get_nid());
     }
+}
+
+void IngredientEditWindowModel::clear() {
+    setNotReady();
+    DSIngredient v;
+    v.kg_per_cup = 0;
+    setM(v);
+    emit qmlUpdateNeeded();
 }

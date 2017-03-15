@@ -16,8 +16,8 @@ ApplicationWindow {
     property int maxWidth: 1024
 
     property int leftToolbarWidth: 65
+    property int leftToolbarMaxWidth: 220
     property int leftPaneMinWidth: 280
-//    property int leftPaneMaxWidth: 420
     property int rightPaneMinWidth: 400
 
     property bool twoPanePossible: width > leftToolbarWidth + leftPaneMinWidth + rightPaneMinWidth
@@ -32,15 +32,14 @@ ApplicationWindow {
         anchors.fill: parent
         columnSpacing: 0
         rowSpacing: 0
-        columns: 4
+        columns: 3
         rows: 1
-        Page{
+        LeftToolbar{
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.maximumWidth: leftToolbarWidth
-            Layout.minimumWidth: leftToolbarWidth
+            Layout.maximumWidth: rightPaneOpen ? leftToolbarWidth : leftToolbarMaxWidth
+            Layout.minimumWidth: rightPaneOpen ? leftToolbarWidth : leftToolbarMaxWidth
             visible: showLeftToolbar
-            NumberAnimation on width {duration: 2200}
         }
         Loader{
             sourceComponent: ingredientsPane
@@ -49,21 +48,14 @@ ApplicationWindow {
             Layout.maximumWidth: showRightPane ? leftPaneMinWidth : -1
             Layout.minimumWidth: leftPaneMinWidth
             visible: showLeftPane
-            NumberAnimation on width {
-                id: leftPaneToMinimum
-                to: leftPaneMinWidth
-                duration: 220
-                running: false
-            }
+
         }
         Loader{
             id: rightPaneLoader
             sourceComponent: ingredientEditPane
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.columnSpan: 2
             visible: showRightPane
-            NumberAnimation on width {duration: 2200}
         }
     }
 
@@ -82,19 +74,14 @@ ApplicationWindow {
         Component.onCompleted: linkUp(NetworkManager, "main_ingredients_model")
     }
 
-    function openIngredientEditWindow(windowParent, model) {
-        Qt.createComponent("qrc:/IngredientEditWindow.qml"
-                           ).createObject(windowParent).open(model)
-    }
-
-    function openRightPane(name) {
+    function openEditIngredient(name) {
+        rightPaneLoader.sourceComponent = ingredientEditPane
         rightPaneLoader.item.open(name)
-        leftPaneToMinimum.start()
         rightPaneOpen = true
     }
 
-    Connections {
-        target: rightPaneLoader.item
-        onClose: rightPaneOpen = false
+    function closeRightPane() {
+        rightPaneLoader.sourceComponent = null
+        rightPaneOpen = false
     }
 }

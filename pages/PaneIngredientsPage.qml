@@ -18,7 +18,7 @@ PaneGridPage {
     cellHeight: 80
 
     reloadTrigger: mainIngredientsModel.reload
-    addTrigger: openRightPane
+    addTrigger: openEditIngredient
 
     Component {
         id: ingredientDelegate
@@ -27,4 +27,5 @@ PaneGridPage {
             height: ingredientsPane.cellHeight
         }
     }
+    Separator{}
 }

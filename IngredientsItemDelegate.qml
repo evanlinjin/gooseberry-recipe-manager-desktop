@@ -21,7 +21,7 @@ Item {
             id: delegate
             anchors.fill: parent
             anchors.margins: -item.spacing
-            onClicked: openRightPane(name)
+            onClicked: openEditIngredient(name)
 
             ColumnLayout {
                 anchors.fill: parent

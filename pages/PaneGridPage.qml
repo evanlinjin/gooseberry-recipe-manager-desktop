@@ -21,7 +21,7 @@ Page {
     property var searchTrigger: function(){}
 
     header: ToolBar {
-        Material.elevation: 0
+        Material.elevation: 1
         RowLayout {
             anchors.centerIn: parent
             height: parent.height
@@ -31,7 +31,7 @@ Page {
                 id: menuButton
                 iconName: "contents"
                 ToolTip.text: "Menu "
-                enabled: false
+                enabled: !showLeftToolbar
             }
             HeaderLabel {
                 id: titleLabel
@@ -80,6 +80,24 @@ Page {
             anchors.bottom: listView.bottom
             anchors.right: listView.right
             anchors.rightMargin: -((panePage.width - listView.width)/2)
+        }
+        add: Transition {
+            NumberAnimation { properties: "x"; from: 0; duration: 220 }
+        }
+//        addDisplaced: Transition {
+//            NumberAnimation { properties: "x,y"; duration: 1000 }
+//        }
+//        displaced: Transition {
+//            NumberAnimation { properties: "x,y"; duration: 1000 }
+//        }
+//        move: Transition {
+//            NumberAnimation { properties: "x,y"; duration: 1000 }
+//        }
+//        moveDisplaced: Transition {
+//            NumberAnimation { properties: "x,y"; duration: 1000 }
+//        }
+        populate: Transition {
+            NumberAnimation { properties: "x,y"; duration: 1000 }
         }
     }
 }
