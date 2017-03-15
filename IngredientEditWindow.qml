@@ -11,7 +11,7 @@ Window {
     title: (m.editMode ? "Edit Ingredient" : "New Ingredient") + " - Recipe Manager"
     width: 940; height: 620
     minimumWidth: 480; minimumHeight: 320
-    flags: Qt.Dialog; modality: Qt.WindowModal
+//    flags: Qt.Dialog; modality: Qt.WindowModal
 
     property int maxWidth: 1024
 
@@ -241,7 +241,7 @@ Window {
     }
 
     function open(name) {
-        m.linkUp(name, NetworkManager, MeasurementsModel, IngredientsModel)
+        m.linkUp(name, NetworkManager, mainMeasurementsModel, mainIngredientsModel)
 
         if (thisWindow.visible === true) {
             thisWindow.raise()

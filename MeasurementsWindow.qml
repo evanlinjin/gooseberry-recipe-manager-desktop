@@ -41,7 +41,7 @@ Window {
             anchors.bottom: parent.bottom
             clip: true
 
-            model: MeasurementsModel
+            model: mainMeasurementsModel
 
             delegate: ItemDelegate {
                 Row {

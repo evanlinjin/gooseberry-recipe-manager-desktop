@@ -58,6 +58,7 @@ public slots:
 
 private slots:
     void process_get_ingredient_of_key_reply(DSIngredient v, QString id);
+    void reloadMeasurements();
     void setReady() {m_ready = true; emit readyChanged();}
     void setNotReady() {m_ready = false; emit readyChanged();}
 };

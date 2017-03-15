@@ -24,8 +24,7 @@ void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, Measurem
         return;
     }
 
-    this->m_volumes = mm->getVolumeMeasurements(); emit volumesChanged();
-    this->m_weights = mm->getWeightMeasurements(); emit weightsChanged();
+    this->reloadMeasurements();
 
     this->m_editMode = (key != QString("")); emit editModeChanged();
     if (!m_editMode) {
@@ -81,6 +80,11 @@ void IngredientEditWindowModel::process_get_ingredient_of_key_reply(DSIngredient
     this->setM(v);
     emit qmlUpdateNeeded();
     this->setReady();
+}
+
+void IngredientEditWindowModel::reloadMeasurements() {
+    this->m_volumes = mModel->getVolumeMeasurements(); emit volumesChanged();
+    this->m_weights = mModel->getWeightMeasurements(); emit weightsChanged();
 }
 
 void IngredientEditWindowModel::revertChanges() {

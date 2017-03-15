@@ -36,8 +36,15 @@ void IngredientsModel::linkUp(NetworkManager *nm, QString id) {
     this->nManager = nm;
     this->nid = id;
 
+    if (nManager == nullptr) {
+        qDebug() << "[IngredientsModel::linkUp] recieved nullptr!?";
+        return;
+    }
+
     connect(nm, SIGNAL(recieved_get_all_ingredients(QList<DSIngredient>,QString)),
             this, SLOT(process_recieved_measurements(QList<DSIngredient>,QString)));
+
+    this->reload();
 }
 
 void IngredientsModel::reloadData(QList<DSIngredient> mList)

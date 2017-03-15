@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
+import Gooseberry 1.0
 
 ApplicationWindow {
     id: mainWindow
@@ -35,10 +36,10 @@ ApplicationWindow {
             titleLabel: "Ingredients"
             handleType: "Ingredient"
 
-            model: IngredientsModel
+            model: mainIngredientsModel
             delegate: IngredientsItemDelegate{}
 
-            reloadTrigger: IngredientsModel.reload
+            reloadTrigger: mainIngredientsModel.reload
             addTrigger: openIngredientEditWindow
         }
     }
@@ -56,15 +57,18 @@ ApplicationWindow {
 
     MeasurementsWindow{id: measurementsWindow}
 
-    Component.onCompleted: {
-        MeasurementsModel.reload()
-        IngredientsModel.reload()
+    MeasurementsModel {
+        id: mainMeasurementsModel
+        Component.onCompleted: linkUp(NetworkManager, "main_measurements_model")
+    }
+
+    IngredientsModel {
+        id: mainIngredientsModel
+        Component.onCompleted: linkUp(NetworkManager, "main_ingredients_model")
     }
 
     function openIngredientEditWindow(windowParent, model) {
         Qt.createComponent("qrc:/IngredientEditWindow.qml"
                            ).createObject(windowParent).open(model)
     }
-
-    IngredientEditWindow{}
 }

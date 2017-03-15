@@ -35,8 +35,15 @@ void MeasurementsModel::linkUp(NetworkManager* nm, QString id) {
     this->nManager = nm;
     this->nid = id;
 
+    if (nManager == nullptr) {
+        qDebug() << "[MeasurementsModel::linkUp] recieved nullptr!?";
+        return;
+    }
+
     connect(nm, SIGNAL(recieved_measurements(QList<DSMeasurement>,QString)),
             this, SLOT(process_recieved_measurements(QList<DSMeasurement>,QString)));
+
+    this->reload();
 }
 
 void MeasurementsModel::reload() {

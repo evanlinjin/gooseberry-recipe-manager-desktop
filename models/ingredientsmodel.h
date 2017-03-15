@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QDebug>
 
 #include "../dstypes.h"
 #include "networkmanager.h"

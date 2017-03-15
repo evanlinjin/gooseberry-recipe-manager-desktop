@@ -41,7 +41,7 @@ ToolBar {
         y: 30
         MenuItem {
             text: "Reload"
-            onClicked: MeasurementsModel.reload()
+            onClicked: mainMeasurementsModel.reload()
         }
     }
 
