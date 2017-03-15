@@ -47,5 +47,6 @@
         <file>icons/large/recipes.svg</file>
         <file>icons/large/settings.svg</file>
         <file>components/LeftToolbarDelegate.qml</file>
+        <file>pages/PaneMeasurementsPage.qml</file>
     </qresource>
 </RCC>

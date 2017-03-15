@@ -25,7 +25,7 @@ Item {
             overlay.source = image
         }
         enabled: parent.enabled
-        opacity: enabled ? 1 : 0.2
+        opacity: enabled ? 1 : 0.7
     }
 
     ColorOverlay {
@@ -35,7 +35,7 @@ Item {
         color: "white"
         visible: false
         enabled: parent.enabled
-        opacity: enabled ? 1 : 0.2
+        opacity: enabled ? 1 : 0.3
     }
 
     enabled: parent.enabled

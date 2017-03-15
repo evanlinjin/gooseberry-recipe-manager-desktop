@@ -93,7 +93,6 @@ Page {
                         id: name_input
                         placeholderText: "Name"
                         enabled: !m.editMode
-//                        font.bold: false
                     }
 
                     TextArea {
@@ -228,7 +227,6 @@ Page {
                             textRole: "symbol"
                             displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
                             model: m.weights
-//                            flat: true
                             Material.elevation: 1
                         }
                         ComboBox {
@@ -237,7 +235,6 @@ Page {
                             textRole: "symbol"
                             displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
                             model: m.volumes
-//                            flat: true
                             Material.elevation: 1
                         }
                     }
@@ -245,7 +242,7 @@ Page {
             }
         }
     }
-    Separator{}
+//    Separator{}
 
     IngredientEditWindowModel {
         id: m

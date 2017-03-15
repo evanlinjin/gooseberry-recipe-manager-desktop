@@ -60,9 +60,11 @@ ApplicationWindow {
         }
     }
 
+    Component {id: leftToolbarPane; LeftToolbar{} }
     Component {id: ingredientsPane; PaneIngredientsPage{} }
     Component {id: ingredientEditPane; PaneEditIngredientPage{} }
-    Component {id: leftToolbarPane; LeftToolbar{} }
+    Component {id: measurementsPane; PaneMeasurementsPage{} }
+
 
     MeasurementsWindow{id: measurementsWindow}
 
@@ -78,6 +80,12 @@ ApplicationWindow {
 
     function openIngredients() {
         leftPaneLoader.sourceComponent = ingredientsPane
+        closeRightPane()
+    }
+
+    function openMeasurements() {
+        leftPaneLoader.sourceComponent = measurementsPane
+        closeRightPane()
     }
 
     function openEditIngredient(name) {

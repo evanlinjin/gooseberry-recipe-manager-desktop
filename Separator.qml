@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
 
 Pane {
-    Material.elevation: 6
+    Material.elevation: 2
     width: 1
     height: parent.height
     Layout.fillHeight: true

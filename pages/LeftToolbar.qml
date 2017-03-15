@@ -48,6 +48,7 @@ Page{
                 icon: "large/measurements"
                 label: "Measurements"
                 highlighted: leftPaneLoader.item ? leftPaneLoader.item.objectName === "__measurements__" : false
+                onClicked: openMeasurements()
             }
         }
     }

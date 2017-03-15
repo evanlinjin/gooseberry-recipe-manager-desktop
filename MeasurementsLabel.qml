@@ -8,4 +8,5 @@ Label {
     anchors.verticalCenter: parent.verticalCenter
     font.capitalization: heading ? Font.AllUppercase : Font.MixedCase
     font.bold: heading
+    horizontalAlignment: Label.AlignHCenter
 }

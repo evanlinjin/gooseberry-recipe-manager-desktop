@@ -7,8 +7,8 @@ import "../"
 
 Page {
     id: panePage
-    height: parent.height
-    width: parent.width/3 - parent.spacing
+    height: parent ? parent.height : 0
+    width: parent ? parent.width/3 - parent.spacing : 0
     property alias titleLabel: titleLabel.text
     property string handleType: ""
     property alias cellHeight: listView.cellHeight
@@ -86,9 +86,6 @@ Page {
             anchors.right: listView.right
             anchors.rightMargin: -((panePage.width - listView.width)/2)
         }
-        //        add: Transition {
-        //            NumberAnimation { properties: "x"; from: 0; duration: 220 }
-        //        }
         populate: Transition {
             NumberAnimation { properties: "y"; duration: 260 }
         }
