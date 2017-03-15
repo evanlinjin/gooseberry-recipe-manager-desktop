@@ -27,18 +27,10 @@ int main(int argc, char *argv[])
                 QString("b55bev238fkb34g"));
 
     auto measurementsModel = new MeasurementsModel();
+    measurementsModel->linkUp(nm, "main_measurements_model");
+
     auto ingredientsModel = new IngredientsModel();
-
-    // Signals and slots.
-    QObject::connect(nm, SIGNAL(recieved_measurements(QList<DSMeasurement>)),
-                     measurementsModel, SLOT(reloadData(QList<DSMeasurement>)));
-    QObject::connect(measurementsModel, SIGNAL(reload()),
-                     nm, SLOT(get_measurements()));
-
-    QObject::connect(nm, SIGNAL(recieved_get_all_ingredients(QList<DSIngredient>)),
-                     ingredientsModel, SLOT(reloadData(QList<DSIngredient>)));
-    QObject::connect(ingredientsModel, SIGNAL(reload()),
-                     nm, SLOT(get_all_ingredients()));
+    ingredientsModel->linkUp(nm, "main_ingredients_model");
 
     // Expose objects.
     rc->setContextProperty("NetworkManager", nm);

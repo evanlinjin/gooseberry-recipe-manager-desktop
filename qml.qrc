@@ -35,5 +35,6 @@
         <file>icons/cancel.svg</file>
         <file>icons/delete.svg</file>
         <file>icons/revert.svg</file>
+        <file>components/TitleTextField.qml</file>
     </qresource>
 </RCC>

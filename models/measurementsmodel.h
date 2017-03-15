@@ -7,6 +7,7 @@
 #include <QVariant>
 
 #include "../dstypes.h"
+#include "networkmanager.h"
 
 class MeasurementsModel : public QAbstractListModel
 {
@@ -27,16 +28,20 @@ public:
 
 private:
     QList<DSMeasurement> m_list;
-
-signals:
-    void reload();
+    NetworkManager* nManager;
+    QString nid;
 
 public slots:
-    void reloadData(QList<DSMeasurement> mList);
+    void linkUp(NetworkManager* nm, QString id);
+    void reload();
     void clear();
 
     QVariant getVolumeMeasurements();
     QVariant getWeightMeasurements();
+
+private slots:
+    void process_recieved_measurements(QList<DSMeasurement> list, QString id);
+    void reloadData(QList<DSMeasurement> mList);
 };
 
 #endif // MEASUREMENTSMODEL_H

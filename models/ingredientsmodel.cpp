@@ -32,6 +32,14 @@ int IngredientsModel::rowCount(const QModelIndex &) const {
     return m_list.size();
 }
 
+void IngredientsModel::linkUp(NetworkManager *nm, QString id) {
+    this->nManager = nm;
+    this->nid = id;
+
+    connect(nm, SIGNAL(recieved_get_all_ingredients(QList<DSIngredient>,QString)),
+            this, SLOT(process_recieved_measurements(QList<DSIngredient>,QString)));
+}
+
 void IngredientsModel::reloadData(QList<DSIngredient> mList)
 {
     this->clear();
@@ -40,10 +48,19 @@ void IngredientsModel::reloadData(QList<DSIngredient> mList)
     endInsertRows();
 }
 
-void IngredientsModel::clear()
-{
+void IngredientsModel::reload() {
+    if (nManager == nullptr) return;
+    nManager->get_all_ingredients(nid);
+}
+
+void IngredientsModel::clear() {
     if (m_list.count() == 0) return;
     beginRemoveRows(QModelIndex(), 0, m_list.count()-1);
     m_list.clear();
     endRemoveRows();
+}
+
+void IngredientsModel::process_recieved_measurements(QList<DSIngredient> list, QString id) {
+    if (id != nid) return;
+    this->reloadData(list);
 }

@@ -20,6 +20,8 @@ class IngredientEditWindowModel : public Ingredient
 public:
     explicit IngredientEditWindowModel(QObject *parent = 0);
 
+    // nid is name() for this class ;)
+
     bool editMode() const {return m_editMode;}
     bool ready() const {return m_ready;}
     QVariant volumes() const {return m_volumes;}
@@ -35,6 +37,7 @@ private:
 
     QObject* getVolumesObj(int i);
     QObject* getWeightsObj(int i);
+    QString get_nid();
 
 signals:
     void editModeChanged();
@@ -54,6 +57,7 @@ public slots:
     void submitChanges();
 
 private slots:
+    void process_get_ingredient_of_key_reply(DSIngredient v, QString id);
     void setReady() {m_ready = true; emit readyChanged();}
     void setNotReady() {m_ready = false; emit readyChanged();}
 };

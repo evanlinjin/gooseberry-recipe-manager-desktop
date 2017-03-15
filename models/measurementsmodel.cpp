@@ -31,11 +31,17 @@ int MeasurementsModel::rowCount(const QModelIndex &) const {
     return m_list.size();
 }
 
-void MeasurementsModel::reloadData(QList<DSMeasurement> mList) {
-    this->clear();
-    beginInsertRows(QModelIndex(), 0, mList.count()-1);
-    m_list = mList;
-    endInsertRows();
+void MeasurementsModel::linkUp(NetworkManager* nm, QString id) {
+    this->nManager = nm;
+    this->nid = id;
+
+    connect(nm, SIGNAL(recieved_measurements(QList<DSMeasurement>,QString)),
+            this, SLOT(process_recieved_measurements(QList<DSMeasurement>,QString)));
+}
+
+void MeasurementsModel::reload() {
+    if (nManager == nullptr) return;
+    nManager->get_measurements(nid);
 }
 
 void MeasurementsModel::clear() {
@@ -69,4 +75,16 @@ QVariant MeasurementsModel::getWeightMeasurements() {
     }
     qDebug() << QVariant::fromValue(list);
     return QVariant::fromValue(list);
+}
+
+void MeasurementsModel::process_recieved_measurements(QList<DSMeasurement> list, QString id) {
+    if (id != nid) return;
+    this->reloadData(list);
+}
+
+void MeasurementsModel::reloadData(QList<DSMeasurement> mList) {
+    this->clear();
+    beginInsertRows(QModelIndex(), 0, mList.count()-1);
+    m_list = mList;
+    endInsertRows();
 }

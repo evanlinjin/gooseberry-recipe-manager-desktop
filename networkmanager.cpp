@@ -8,7 +8,7 @@ NetworkManager::NetworkManager(QString url, QString token, QObject *parent) :
             this, SLOT(handleReply(QNetworkReply*)));
 }
 
-void NetworkManager::handleRequest(QString cmd, QJsonValue v) {
+void NetworkManager::handleRequest(QString cmd, QJsonValue v, QString id) {
     if (m_cmds.add(cmd) == false) return;
 
     QNetworkRequest nReq;
@@ -20,15 +20,20 @@ void NetworkManager::handleRequest(QString cmd, QJsonValue v) {
     obj["token"] = m_token;
     obj["data"] = v;
 
-    nm->post(nReq, QJsonDocument(obj).toJson());
+    QNetworkReply* reply = nm->post(nReq, QJsonDocument(obj).toJson());
+    replies[reply] = id;
 }
 
 void NetworkManager::handleReply(QNetworkReply* reply) {
     QJsonObject obj = QJsonDocument::fromJson(reply->readAll()).object();
     reply->deleteLater();
 
+    // handle ongoing commands. <-- should probably delete this functionality...
     auto cmd = obj["cmd"].toString();
     m_cmds.remove(cmd);
+
+    // get id.
+    auto id = replies[reply];
 
     auto v = obj["data"];
 
@@ -37,24 +42,24 @@ void NetworkManager::handleReply(QNetworkReply* reply) {
 
     if (cmd == QString("")) return;
     else if (cmd == QString(CMD_GET_MEASUREMENTS))
-        process_measurements(v);
+        process_measurements(v, id);
     else if (cmd == QString(CMD_GET_ALL_INGREDIENTS))
-        process_get_all_ingredients(v);
+        process_get_all_ingredients(v, id);
     else if (cmd == QString(CMD_GET_INGREDIENT_OF_KEY))
-        process_get_ingredient_of_key(v);
+        process_get_ingredient_of_key(v, id);
     else if (cmd == QString(CMD_MODIFY_INGREDIENT))
-        process_modify_ingredient(v);
+        process_modify_ingredient(v, id);
     else if (cmd == QString(CMD_ADD_INGREDIENT))
-        process_add_ingredient(v);
+        process_add_ingredient(v, id);
 }
 
 /* COMMAND : GET_MEASUREMENTS */
 
-void NetworkManager::get_measurements() {
-    this->handleRequest(CMD_GET_MEASUREMENTS, 0);
+void NetworkManager::get_measurements(QString id) {
+    this->handleRequest(CMD_GET_MEASUREMENTS, 0, id);
 }
 
-void NetworkManager::process_measurements(QJsonValue v) {
+void NetworkManager::process_measurements(QJsonValue v, QString id) {
     QList<DSMeasurement> mArray;
     auto dataArray = v.toArray();
     qDebug() << "::: MEASUREMENTS >>>";
@@ -69,16 +74,16 @@ void NetworkManager::process_measurements(QJsonValue v) {
         mArray.append(m);
     }
     qDebug() << "";
-    emit recieved_measurements(mArray);
+    emit recieved_measurements(mArray, id);
 }
 
 /* COMMAND : GET_ALL_INGREDIENTS */
 
-void NetworkManager::get_all_ingredients() {
-    this->handleRequest(CMD_GET_ALL_INGREDIENTS, 0);
+void NetworkManager::get_all_ingredients(QString id) {
+    this->handleRequest(CMD_GET_ALL_INGREDIENTS, 0, id);
 }
 
-void NetworkManager::process_get_all_ingredients(QJsonValue v) {
+void NetworkManager::process_get_all_ingredients(QJsonValue v, QString id) {
     QList<DSIngredient> vArray;
     auto dataArray = v.toArray();
     qDebug() << "::: INGREDIENTS >>>";
@@ -96,16 +101,16 @@ void NetworkManager::process_get_all_ingredients(QJsonValue v) {
         vArray.append(v);
     }
     qDebug() << "";
-    emit recieved_get_all_ingredients(vArray);
+    emit recieved_get_all_ingredients(vArray, id);
 }
 
 /* COMMAND : GET_INGREDIENT_OF_KEY */
 
-void NetworkManager::get_ingredient_of_key(QString key) {
-    this->handleRequest(CMD_GET_INGREDIENT_OF_KEY, key);
+void NetworkManager::get_ingredient_of_key(QString key, QString id) {
+    this->handleRequest(CMD_GET_INGREDIENT_OF_KEY, key, id);
 }
 
-void NetworkManager::process_get_ingredient_of_key(QJsonValue v) {
+void NetworkManager::process_get_ingredient_of_key(QJsonValue v, QString id) {
     auto d = v.toObject();
     {
         DSIngredient v;
@@ -117,13 +122,13 @@ void NetworkManager::process_get_ingredient_of_key(QJsonValue v) {
             v.tags.append(tags.at(j).toString());
         }
         qDebug() << "[GOT INGREDIENT]" << v.name << v.tags << v.kg_per_cup << v.description;
-        emit recieved_get_ingredient_of_key(v);
+        emit recieved_get_ingredient_of_key(v, id);
     }
 }
 
 /* COMMAND : MODIFY_INGREDIENT */
 
-void NetworkManager::modify_ingredient(DSIngredient v) {
+void NetworkManager::modify_ingredient(DSIngredient v, QString id) {
     QJsonObject obj;
     obj["name"] = v.name;
     obj["description"] = v.description;
@@ -133,10 +138,10 @@ void NetworkManager::modify_ingredient(DSIngredient v) {
         tags.append(v.tags.at(i));
     }
     obj["tags"] = tags;
-    this->handleRequest(CMD_MODIFY_INGREDIENT, obj);
+    this->handleRequest(CMD_MODIFY_INGREDIENT, obj, id);
 }
 
-void NetworkManager::process_modify_ingredient(QJsonValue v) {
+void NetworkManager::process_modify_ingredient(QJsonValue v, QString id) {
     auto d = v.toObject();
     {
         DSIngredient v;
@@ -148,13 +153,13 @@ void NetworkManager::process_modify_ingredient(QJsonValue v) {
             v.tags.append(tags.at(j).toString());
         }
         qDebug() << "[GOT INGREDIENT]" << v.name << v.tags << v.kg_per_cup << v.description;
-        emit recieved_modify_ingredient(v);
+        emit recieved_modify_ingredient(v, id);
     }
 }
 
 /* COMMAND : ADD_INGREDIENT */
 
-void NetworkManager::add_ingredient(DSIngredient v) {
+void NetworkManager::add_ingredient(DSIngredient v, QString id) {
     QJsonObject obj;
     obj["name"] = v.name;
     obj["description"] = v.description;
@@ -164,10 +169,10 @@ void NetworkManager::add_ingredient(DSIngredient v) {
         tags.append(v.tags.at(i));
     }
     obj["tags"] = tags;
-    this->handleRequest(CMD_ADD_INGREDIENT, obj);
+    this->handleRequest(CMD_ADD_INGREDIENT, obj, id);
 }
 
-void NetworkManager::process_add_ingredient(QJsonValue v) {
+void NetworkManager::process_add_ingredient(QJsonValue v, QString id) {
     auto d = v.toObject();
     {
         DSIngredient v;
@@ -179,6 +184,6 @@ void NetworkManager::process_add_ingredient(QJsonValue v) {
             v.tags.append(tags.at(j).toString());
         }
         qDebug() << "[GOT INGREDIENT]" << v.name << v.tags << v.kg_per_cup << v.description;
-        emit recieved_add_ingredient(v);
+        emit recieved_add_ingredient(v, id);
     }
 }

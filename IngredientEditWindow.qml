@@ -9,21 +9,30 @@ import "components"
 Window {
     id: thisWindow
     title: (m.editMode ? "Edit Ingredient" : "New Ingredient") + " - Recipe Manager"
-    width: 480; height: 620
+    width: 940; height: 620
     minimumWidth: 480; minimumHeight: 320
     flags: Qt.Dialog; modality: Qt.WindowModal
 
+    property int maxWidth: 1024
 
+    BusyIndicator {
+        anchors.centerIn: parent
+        running: !m.ready
+        z: page.z + 1
+    }
 
     Page {
         id: page
         anchors.fill: parent
+        enabled: m.ready
 
         header: ToolBar {
             Material.elevation: 0
 
             RowLayout {
-                anchors.fill: parent
+                anchors.centerIn: parent
+                height: parent.height
+                width: parent.width < maxWidth ? parent.width : maxWidth
                 spacing: 0
 
                 IconToolButton {
@@ -40,21 +49,18 @@ Window {
                     iconName: "delete"
                     ToolTip.text: "Delete Ingredient"
                     onClicked: thisWindow.close()
-                    enabled: m.ready
                 }
 
                 IconToolButton {
                     iconName: "revert"
                     ToolTip.text: "Revert Changes"
                     onClicked: m.revertChanges()
-                    enabled: m.ready
                 }
 
                 IconToolButton {
                     iconName: "save"
                     ToolTip.text: "Save Changes"
                     onClicked: {m.submitChanges(); thisWindow.close()}
-                    enabled: m.ready
                 }
             }
         }
@@ -71,7 +77,6 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.margins: spacing
                 property int spacing: 20
-                property int maxWidth: 1024
                 property int maxWidth1: 670
                 property int maxWidth2: rows === 2 ? maxWidth*2/6 : maxWidth1
                 property int switchWidth: 210
@@ -92,11 +97,10 @@ Window {
                     ColumnLayout {
                         anchors.fill: parent
 
-                        TextField {
+                        TitleTextField {
                             id: name_input
                             placeholderText: "Name"
-                            Layout.fillWidth: true
-                            enabled: m.ready && !m.editMode
+                            enabled: !m.editMode
                         }
 
                         TextArea {
@@ -104,7 +108,6 @@ Window {
                             placeholderText: "Enter description"
                             Layout.fillWidth: true
                             wrapMode: TextArea.Wrap
-                            enabled: m.ready
                         }
                     }
                 }
@@ -135,7 +138,6 @@ Window {
                             delegate: TagItem {
                                 text: modelData
                                 xButton.onClicked: m.removeTag(modelData)
-                                enabled: m.ready
                             }
                             ScrollBar.horizontal: ScrollBar {}
                         }
@@ -148,7 +150,6 @@ Window {
                                 placeholderText: "Add tag..."
                                 Layout.fillWidth: true
                                 onAccepted: {m.addTag(text); clear()}
-                                enabled: m.ready
                             }
 
                             IconToolButton {
@@ -156,7 +157,6 @@ Window {
                                 iconName: "add"
                                 ToolTip.text: "Add tag"
                                 onClicked: {m.addTag(addTagField.text); addTagField.clear()}
-                                enabled: m.ready
                             }
                         }
                     }
@@ -187,7 +187,6 @@ Window {
                                 id: weight_value_input
                                 placeholderText: "Weight"
                                 Layout.fillWidth: true
-                                enabled: m.ready
                             }
                             Label {
                                 text: "<h1>  =  </h1>"
@@ -199,7 +198,6 @@ Window {
                                 id: volume_value_input
                                 placeholderText: "Volume"
                                 Layout.fillWidth: true
-                                enabled: m.ready
                             }
                             IconToolButton {
                                 Layout.fillWidth: true
@@ -208,8 +206,7 @@ Window {
                                 iconName: "refresh"
                                 ToolTip.text: "Change conversion"
                                 enabled: parseFloat(weight_value_input.text) >= 0 &&
-                                         parseFloat(volume_value_input.text) >= 0 &&
-                                         m.ready
+                                         parseFloat(volume_value_input.text) >= 0
                                 onClicked: {
                                     m.changeConversion(
                                                 weight_value_input.text,
@@ -227,7 +224,6 @@ Window {
                                 displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
                                 model: m.weights
                                 Material.elevation: 0
-                                enabled: m.ready
                             }
                             ComboBox {
                                 id: volume_unit_input
@@ -236,7 +232,6 @@ Window {
                                 displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
                                 model: m.volumes
                                 Material.elevation: 0
-                                enabled: m.ready
                             }
                         }
                     }

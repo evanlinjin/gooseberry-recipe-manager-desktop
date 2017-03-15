@@ -12,6 +12,10 @@ QObject* IngredientEditWindowModel::getWeightsObj(int i) {
     return m_weights.value<QList<QObject*> >().at(i);
 }
 
+QString IngredientEditWindowModel::get_nid() {
+    return QString("ingredient_edit_window_model ") + name();
+}
+
 void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, MeasurementsModel *mm, IngredientsModel *im) {
     this->nManager = nm; this->mModel = mm; this->iModel = im;
 
@@ -29,14 +33,10 @@ void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, Measurem
         return;
     }
 
-    connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient)),
-            this, SLOT(setM(DSIngredient)));
-    connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient)),
-            this, SIGNAL(qmlUpdateNeeded()));
-    connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient)),
-            this, SLOT(setReady()));
+    connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient,QString)),
+            this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
 
-    nm->get_ingredient_of_key(key);
+    nm->get_ingredient_of_key(key, get_nid());
 }
 
 void IngredientEditWindowModel::addTag(QString v) {
@@ -76,15 +76,22 @@ void IngredientEditWindowModel::changeConversion(QString wv, int wu, QString vv,
     setKgPCup(kgs/cps);
 }
 
+void IngredientEditWindowModel::process_get_ingredient_of_key_reply(DSIngredient v, QString id) {
+    if (id != get_nid()) return;
+    this->setM(v);
+    emit qmlUpdateNeeded();
+    this->setReady();
+}
+
 void IngredientEditWindowModel::revertChanges() {
     setNotReady();
-    nManager->get_ingredient_of_key(this->name());
+    nManager->get_ingredient_of_key(this->name(), get_nid());
 }
 
 void IngredientEditWindowModel::submitChanges() {
     if (editMode()) {
-        nManager->modify_ingredient(this->getM());
+        nManager->modify_ingredient(this->getM(), get_nid());
     } else {
-        nManager->add_ingredient(this->getM());
+        nManager->add_ingredient(this->getM(), get_nid());
     }
 }
