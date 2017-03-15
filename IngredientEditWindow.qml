@@ -12,18 +12,15 @@ Window {
     width: 940; height: 620
     minimumWidth: 480; minimumHeight: 320
 
-//    property int maxWidth: 1024
-
-    BusyIndicator {
-        anchors.centerIn: parent
-        running: !m.ready
-        z: page.z + 1
-    }
-
     Page {
         id: page
         anchors.fill: parent
         enabled: m.ready
+
+        BusyIndicator {
+            anchors.centerIn: parent
+            running: !m.ready
+        }
 
         header: ToolBar {
             Material.elevation: 0

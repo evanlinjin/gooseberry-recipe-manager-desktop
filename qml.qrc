@@ -36,5 +36,8 @@
         <file>icons/delete.svg</file>
         <file>icons/revert.svg</file>
         <file>components/TitleTextField.qml</file>
+        <file>pages/PaneGridPage.qml</file>
+        <file>pages/PaneIngredientsPage.qml</file>
+        <file>pages/PaneEditIngredientPage.qml</file>
     </qresource>
 </RCC>
