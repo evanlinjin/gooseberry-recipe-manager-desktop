@@ -10,6 +10,7 @@ PaneGridPage {
     anchors.fill: parent
     titleLabel: "Ingredients"
     handleType: "Ingredient"
+    objectName: "__ingredients__"
 
     model: mainIngredientsModel
     delegate: ingredientDelegate

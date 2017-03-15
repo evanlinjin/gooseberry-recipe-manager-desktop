@@ -11,7 +11,6 @@ ApplicationWindow {
     width: 960; height: 640
     minimumWidth: 280; minimumHeight: 280
     title: qsTr("Dash - Recipe Manager")
-//    header: MainMenu{}
 
     property int maxWidth: 1024
 
@@ -34,7 +33,8 @@ ApplicationWindow {
         rowSpacing: 0
         columns: 3
         rows: 1
-        LeftToolbar{
+        Loader{
+            sourceComponent: leftToolbarPane
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.maximumWidth: rightPaneOpen ? leftToolbarWidth : leftToolbarMaxWidth
@@ -42,7 +42,8 @@ ApplicationWindow {
             visible: showLeftToolbar
         }
         Loader{
-            sourceComponent: ingredientsPane
+            id: leftPaneLoader
+            sourceComponent: Component{Page{header: ToolBar{Material.elevation: 1}}}
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.maximumWidth: showRightPane ? leftPaneMinWidth : -1
@@ -52,7 +53,7 @@ ApplicationWindow {
         }
         Loader{
             id: rightPaneLoader
-            sourceComponent: ingredientEditPane
+//            sourceComponent: ingredientEditPane
             Layout.fillHeight: true
             Layout.fillWidth: true
             visible: showRightPane
@@ -61,6 +62,7 @@ ApplicationWindow {
 
     Component {id: ingredientsPane; PaneIngredientsPage{} }
     Component {id: ingredientEditPane; PaneEditIngredientPage{} }
+    Component {id: leftToolbarPane; LeftToolbar{} }
 
     MeasurementsWindow{id: measurementsWindow}
 
@@ -72,6 +74,10 @@ ApplicationWindow {
     IngredientsModel {
         id: mainIngredientsModel
         Component.onCompleted: linkUp(NetworkManager, "main_ingredients_model")
+    }
+
+    function openIngredients() {
+        leftPaneLoader.sourceComponent = ingredientsPane
     }
 
     function openEditIngredient(name) {

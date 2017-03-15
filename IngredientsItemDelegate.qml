@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.1
 
 import "components"
 
@@ -10,12 +11,13 @@ Item {
     width: 360
     height: 360
 
-    Frame {
+    Pane {
         id: frame
         anchors.centerIn: parent
         anchors.verticalCenterOffset: item.spacing/2
         width: parent.width - item.spacing*2
         height: parent.height - item.spacing*2
+        Material.elevation: 1
 
         ItemDelegate {
             id: delegate

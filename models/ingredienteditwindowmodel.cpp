@@ -29,13 +29,16 @@ void IngredientEditWindowModel::linkUp(QString key, NetworkManager* nm, Measurem
 
     this->m_editMode = (key != QString("")); emit editModeChanged();
 
-    connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient,QString)),
+    foreach (auto var, connections) QObject::disconnect(var);
+    connections.clear();
+
+    connections << connect(nm, SIGNAL(recieved_get_ingredient_of_key(DSIngredient,QString)),
             this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
 
-    connect(nm, SIGNAL(recieved_add_ingredient(DSIngredient,QString)),
+    connections << connect(nm, SIGNAL(recieved_add_ingredient(DSIngredient,QString)),
             this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
 
-    connect(nm, SIGNAL(recieved_modify_ingredient(DSIngredient,QString)),
+    connections << connect(nm, SIGNAL(recieved_modify_ingredient(DSIngredient,QString)),
             this, SLOT(process_get_ingredient_of_key_reply(DSIngredient,QString)));
 
     nm->get_ingredient_of_key(key, get_nid());
@@ -47,7 +50,7 @@ void IngredientEditWindowModel::addTag(QString v) {
     for (int i = 0; i < newTags.size(); i++) {
         if (newTags.at(i) == v) return;
     }
-    newTags.append(v);
+    if (v != QString("")) newTags.append(v);
     newTags.sort();
     this->setTags(newTags);
 }

@@ -79,12 +79,12 @@ Page {
 
             flow: GridLayout.TopToBottom
 
-            GroupBox {
+            Pane {
                 id: nameGroup
-                title: "Name & Description"
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.maxWidth1
                 Layout.minimumHeight: conversionGroup.height
+                Material.elevation: 1
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -93,6 +93,7 @@ Page {
                         id: name_input
                         placeholderText: "Name"
                         enabled: !m.editMode
+//                        font.bold: false
                     }
 
                     TextArea {
@@ -104,10 +105,10 @@ Page {
                 }
             }
 
-            GroupBox {
-                title: "Tags"
+            Pane {
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.maxWidth1
+                Material.elevation: 1
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -141,12 +142,19 @@ Page {
                             id: addTagField
                             placeholderText: "Add tag..."
                             Layout.fillWidth: true
+                            validator: RegExpValidator {regExp: /^[a-z]+$/}
                             onAccepted: {m.addTag(text); clear()}
                         }
 
-                        IconToolButton {
+                        RoundButton {
                             id: addButton
-                            iconName: "add"
+                            Icon {
+                                name: "add"
+                                anchors.centerIn: parent
+                                overlay: true
+                                color: Material.primary
+                            }
+                            flat: true
                             ToolTip.text: "Add tag"
                             onClicked: {m.addTag(addTagField.text); addTagField.clear()}
                         }
@@ -154,16 +162,17 @@ Page {
                 }
             }
 
-            GroupBox {
+            Pane {
                 id: conversionGroup
-                title: "Weight / Volume Conversion"
                 Layout.fillWidth: true
                 Layout.maximumWidth: parent.maxWidth2
+                Material.elevation: 1
 
                 ColumnLayout {
                     anchors.fill: parent
-                    Frame {
+                    Pane {
                         Layout.fillWidth: true
+                        Material.elevation: 1
                         Label {
                             anchors.fill: parent
                             text: ("<b>Current:</b> %1 Kg/Cup").arg(m.kgPCup)
@@ -191,12 +200,16 @@ Page {
                             placeholderText: "Volume"
                             Layout.fillWidth: true
                         }
-                        IconToolButton {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                        RoundButton {
                             Layout.rowSpan: 2
-                            iconName: "refresh"
-                            ToolTip.text: "Change conversion"
+                            Icon {
+                                name: "foward"
+                                anchors.centerIn: parent
+                                overlay: true
+                                color: Material.primary
+                            }
+                            flat: true
+                            ToolTip.text: "Submit new conversion"
                             enabled: parseFloat(weight_value_input.text) >= 0 &&
                                      parseFloat(volume_value_input.text) >= 0
                             onClicked: {
@@ -215,7 +228,8 @@ Page {
                             textRole: "symbol"
                             displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
                             model: m.weights
-                            Material.elevation: 0
+//                            flat: true
+                            Material.elevation: 1
                         }
                         ComboBox {
                             id: volume_unit_input
@@ -223,7 +237,8 @@ Page {
                             textRole: "symbol"
                             displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
                             model: m.volumes
-                            Material.elevation: 0
+//                            flat: true
+                            Material.elevation: 1
                         }
                     }
                 }

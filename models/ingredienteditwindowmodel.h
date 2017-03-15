@@ -31,6 +31,7 @@ private:
     NetworkManager *nManager;
     MeasurementsModel *mModel;
     IngredientsModel *iModel;
+    QList<QMetaObject::Connection> connections;
 
     bool m_editMode, m_ready;
     QVariant m_volumes, m_weights;

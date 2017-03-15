@@ -6,7 +6,8 @@ Item {
     height: image.height
 
     property alias size: image.width
-//    property alias color: overlay.color
+    property alias color: overlay.color
+    property alias overlay: overlay.visible
     property string name
 
     Image {
@@ -20,15 +21,22 @@ Item {
         fillMode: Image.PreserveAspectCrop
         source: ("qrc:/icons/%1.svg").arg(name)
 
-//        onSourceChanged: {
-//            overlay.source = image
-//        }
+        onSourceChanged: {
+            overlay.source = image
+        }
+        enabled: parent.enabled
+        opacity: enabled ? 1 : 0.2
     }
 
-//    ColorOverlay {
-//        id: overlay
-//        anchors.fill: image
-//        source: image
-//        color: "black"
-//    }
+    ColorOverlay {
+        id: overlay
+        anchors.fill: image
+        source: image
+        color: "white"
+        visible: false
+        enabled: parent.enabled
+        opacity: enabled ? 1 : 0.2
+    }
+
+    enabled: parent.enabled
 }

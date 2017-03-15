@@ -61,11 +61,16 @@ Page {
         Icon {
             name: "add"
             anchors.centerIn: parent
+            overlay: true
+            color: Material.background
         }
+        highlighted: true
+        Material.accent: Material.primary
         ToolTip.text: "Add " + handleType
         ToolTip.visible: hovered
         onClicked: addTrigger()
     }
+
 
     GridView {
         id: listView
@@ -81,23 +86,11 @@ Page {
             anchors.right: listView.right
             anchors.rightMargin: -((panePage.width - listView.width)/2)
         }
-        add: Transition {
-            NumberAnimation { properties: "x"; from: 0; duration: 220 }
-        }
-//        addDisplaced: Transition {
-//            NumberAnimation { properties: "x,y"; duration: 1000 }
-//        }
-//        displaced: Transition {
-//            NumberAnimation { properties: "x,y"; duration: 1000 }
-//        }
-//        move: Transition {
-//            NumberAnimation { properties: "x,y"; duration: 1000 }
-//        }
-//        moveDisplaced: Transition {
-//            NumberAnimation { properties: "x,y"; duration: 1000 }
-//        }
+        //        add: Transition {
+        //            NumberAnimation { properties: "x"; from: 0; duration: 220 }
+        //        }
         populate: Transition {
-            NumberAnimation { properties: "x,y"; duration: 1000 }
+            NumberAnimation { properties: "y"; duration: 260 }
         }
     }
 }

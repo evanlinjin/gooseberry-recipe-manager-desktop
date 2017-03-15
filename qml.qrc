@@ -39,5 +39,13 @@
         <file>pages/PaneIngredientsPage.qml</file>
         <file>pages/PaneEditIngredientPage.qml</file>
         <file>pages/LeftToolbar.qml</file>
+        <file>icons/large/attribution.txt</file>
+        <file>icons/large/events.svg</file>
+        <file>icons/large/information.svg</file>
+        <file>icons/large/ingredients.svg</file>
+        <file>icons/large/measurements.svg</file>
+        <file>icons/large/recipes.svg</file>
+        <file>icons/large/settings.svg</file>
+        <file>components/LeftToolbarDelegate.qml</file>
     </qresource>
 </RCC>
