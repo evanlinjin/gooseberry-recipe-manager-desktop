@@ -7,52 +7,35 @@ import Gooseberry 1.0
 ApplicationWindow {
     id: mainWindow
     visible: true
-    width: 960
-    height: 640
-    minimumWidth: 520
-    minimumHeight: 280
+    width: 960; height: 640
+    minimumWidth: 280; minimumHeight: 280
     title: qsTr("Dash - Recipe Manager")
     header: MainMenu{}
 
-    Row {
+    property int maxWidth: 1024
+
+    PanePage {
+        id: ingredientsPane
         anchors.fill: parent
-        spacing: 0
-        anchors.margins: spacing
+        titleLabel: "Ingredients"
+        handleType: "Ingredient"
 
-        PanePage {
-            id: eventsPane
-            titleLabel: "Events"
-            handleType: "Event"
+        model: mainIngredientsModel
+        delegate: ingredientDelegate
+
+        cellWidth: 240
+        cellHeight: 80
+
+        reloadTrigger: mainIngredientsModel.reload
+        addTrigger: openIngredientEditWindow
+
+        Component {
+            id: ingredientDelegate
+            IngredientsItemDelegate{
+                width: ingredientsPane.cellWidth
+                height: ingredientsPane.cellHeight
+            }
         }
-
-        PanePage {
-            id: recipesPane
-            titleLabel: "Recipes"
-            handleType: "Recipe"
-        }
-
-        PanePage {
-            id: ingredientsPane
-            titleLabel: "Ingredients"
-            handleType: "Ingredient"
-
-            model: mainIngredientsModel
-            delegate: IngredientsItemDelegate{}
-
-            reloadTrigger: mainIngredientsModel.reload
-            addTrigger: openIngredientEditWindow
-        }
-    }
-
-    RowLayout {
-        anchors.fill: parent
-        spacing: 0
-        Item{}
-        Separator{}
-        Item{}
-        Separator{}
-        Item{}
-        Separator{}
     }
 
     MeasurementsWindow{id: measurementsWindow}

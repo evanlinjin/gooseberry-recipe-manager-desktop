@@ -10,6 +10,8 @@ Page {
     width: parent.width/3 - parent.spacing
     property alias titleLabel: titleLabel.text
     property string handleType: ""
+    property alias cellHeight: listView.cellHeight
+    property alias cellWidth: listView.cellWidth
     property alias model: listView.model
     property alias delegate: listView.delegate
 
@@ -20,28 +22,31 @@ Page {
     header: ToolBar {
         Material.elevation: 0
         RowLayout {
+            anchors.centerIn: parent
+            height: parent.height
+            width: parent.width < maxWidth ? parent.width : maxWidth
             spacing: 0
-            anchors.fill: parent
-            anchors.leftMargin: 15
-
+            IconToolButton {
+                id: menuButton
+                iconName: "contents"
+                ToolTip.text: "Menu "
+                enabled: false
+            }
             HeaderLabel {
                 id: titleLabel
             }
-
-            IconToolButton {
-                id: addButton
-                iconName: "add"
-                ToolTip.text: "New " + handleType
-                onClicked: addTrigger()
-            }
-
+//            IconToolButton {
+//                id: addButton
+//                iconName: "add"
+//                ToolTip.text: "New " + handleType
+//                onClicked: addTrigger()
+//            }
             IconToolButton {
                 id: reloadButton
                 iconName: "refresh"
                 ToolTip.text: "Reload " + handleType + "s"
                 onClicked: reloadTrigger()
             }
-
             IconToolButton {
                 id: searchButton
                 iconName: "find"
@@ -50,10 +55,36 @@ Page {
             }
         }
     }
-    ListView {
+    RoundButton {
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.margins: 30
+        background.opacity: 1
+        width: 60
+        height: 60
+        z: listView.z + 10
+        Icon {
+            name: "add"
+            anchors.centerIn: parent
+        }
+        ToolTip.text: "Add " + handleType
+        ToolTip.visible: hovered
+        onClicked: addTrigger()
+    }
+
+    GridView {
         id: listView
-        anchors.fill: parent
+        anchors.centerIn: parent
+        height: parent.height
+        width:  Math.floor((parent.width < maxWidth ? parent.width : maxWidth)/cellWidth)*cellWidth
         clip: true
-        ScrollBar.vertical: ScrollBar {}
+        onContentWidthChanged: console.log(contentWidth)
+        ScrollBar.vertical: ScrollBar {
+            parent: listView.parent
+            anchors.top: listView.top
+            anchors.bottom: listView.bottom
+            anchors.right: listView.right
+            anchors.rightMargin: -((panePage.width - listView.width)/2)
+        }
     }
 }

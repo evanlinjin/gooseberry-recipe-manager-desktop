@@ -34,6 +34,7 @@ void NetworkManager::handleReply(QNetworkReply* reply) {
 
     // get id.
     auto id = replies[reply];
+    replies.remove(reply);
 
     auto v = obj["data"];
 

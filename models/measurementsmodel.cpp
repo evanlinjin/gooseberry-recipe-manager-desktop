@@ -67,7 +67,6 @@ QVariant MeasurementsModel::getVolumeMeasurements() {
             list.append(obj);
         }
     }
-    qDebug() << QVariant::fromValue(list);
     return QVariant::fromValue(list);
 }
 
@@ -80,7 +79,6 @@ QVariant MeasurementsModel::getWeightMeasurements() {
             list.append(obj);
         }
     }
-    qDebug() << QVariant::fromValue(list);
     return QVariant::fromValue(list);
 }
 

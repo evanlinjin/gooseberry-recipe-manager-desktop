@@ -4,32 +4,43 @@ import QtQuick.Layouts 1.3
 
 import "components"
 
-ItemDelegate {
-    width: parent.width
+Item {
+    id: item
+    property int spacing: 10
+    width: 360
+    height: 360
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 5
-        anchors.leftMargin: 15
-        anchors.rightMargin: 15
-        spacing: 0
+    Frame {
+        id: frame
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: item.spacing/2
+        width: parent.width - item.spacing*2
+        height: parent.height - item.spacing*2
 
-        Label {
-            id: ingredientName
-            text: name
-            font.bold: true
-            elide: Label.ElideRight
-            Layout.fillWidth: true
-        }
-        Label {
-            text: ("%1").arg(tags)
-            opacity: 0.6
-            font.pixelSize: ingredientName.font.pixelSize*4/5
-            elide: Label.ElideRight
-            Layout.fillWidth: true
+        ItemDelegate {
+            id: delegate
+            anchors.fill: parent
+            anchors.margins: -item.spacing
+            onClicked: openIngredientEditWindow(this, name)
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: item.spacing
+                Label {
+                    id: ingredientName
+                    text: name
+                    font.bold: true
+                    elide: Label.ElideRight
+                    Layout.fillWidth: true
+                }
+                Label {
+                    text: description === "" ? "No description." : description
+                    opacity: 0.6
+                    font.pixelSize: ingredientName.font.pixelSize*4/5
+                    elide: Label.ElideRight
+                    Layout.fillWidth: true
+                }
+            }
         }
     }
-    onClicked: openIngredientEditWindow(this, name)
-    ToolTip.visible: hovered
-    ToolTip.text: ("Conversion: %1 kg/cup").arg(kg_per_cup)
 }
