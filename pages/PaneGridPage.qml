@@ -32,6 +32,7 @@ Page {
                 iconName: "contents"
                 ToolTip.text: "Menu "
                 enabled: !showLeftToolbar
+                onClicked: drawer.open()
             }
             HeaderLabel {
                 id: titleLabel

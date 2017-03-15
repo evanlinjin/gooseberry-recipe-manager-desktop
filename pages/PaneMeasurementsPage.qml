@@ -21,6 +21,7 @@ Page {
                 iconName: "contents"
                 ToolTip.text: "Menu "
                 enabled: !showLeftToolbar
+                onClicked: drawer.open()
             }
             HeaderLabel {
                 text: "Measurements"
@@ -67,12 +68,8 @@ Page {
 
         delegate: ItemDelegate {
             width: parent.width
-            height: 40
             Row {
-//                anchors.fill: parent
-//                anchors.leftMargin: spacing
                 anchors.centerIn: parent
-//                anchors.verticalCenterOffset: toolbar.height
                 height: parent.height
                 width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
                 spacing: 10
@@ -81,6 +78,7 @@ Page {
                 MeasurementsLabel {text: multiply}
                 MeasurementsLabel {text: type}
             }
+            enabled: false
         }
 
         ScrollBar.vertical: ScrollBar {

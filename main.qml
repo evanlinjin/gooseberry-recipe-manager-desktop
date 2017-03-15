@@ -53,10 +53,19 @@ ApplicationWindow {
         }
         Loader{
             id: rightPaneLoader
-//            sourceComponent: ingredientEditPane
             Layout.fillHeight: true
             Layout.fillWidth: true
             visible: showRightPane
+        }
+    }
+
+    Drawer {
+        id: drawer
+        width: showLeftToolbar ? 0 : mainWindow.width * 0.6
+        height: showLeftToolbar ? 0 : mainWindow.height
+        Loader {
+            anchors.fill: parent
+            sourceComponent: leftToolbarPane
         }
     }
 
@@ -95,6 +104,7 @@ ApplicationWindow {
     }
 
     function closeRightPane() {
+        drawer.close()
         rightPaneLoader.sourceComponent = null
         rightPaneOpen = false
     }

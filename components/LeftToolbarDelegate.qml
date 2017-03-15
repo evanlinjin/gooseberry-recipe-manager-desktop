@@ -9,7 +9,10 @@ import "../"
 ItemDelegate {
     property alias icon: icon.name
     property alias label: label.text
-    width: rightPaneOpen ? leftToolbarWidth : leftToolbarMaxWidth
+    width: twoPanePossible ?
+               (rightPaneOpen ? leftToolbarWidth : leftToolbarMaxWidth) :
+               (parent ? parent.width : 0)
+
     Layout.fillWidth: true
     height: leftToolbarWidth
     RowLayout {
@@ -25,6 +28,9 @@ ItemDelegate {
             font.capitalization: Font.MixedCase
         }
     }
-    ToolTip.visible: rightPaneOpen ? hovered : false
+    ToolTip.visible: twoPanePossible ?
+                         (rightPaneOpen ? hovered : false) :
+                         (false)
+
     ToolTip.text: label.text
 }

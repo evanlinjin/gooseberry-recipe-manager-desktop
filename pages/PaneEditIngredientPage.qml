@@ -242,7 +242,6 @@ Page {
             }
         }
     }
-//    Separator{}
 
     IngredientEditWindowModel {
         id: m
