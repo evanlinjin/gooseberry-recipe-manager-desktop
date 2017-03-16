@@ -48,5 +48,8 @@
         <file>components/DynamicFrame.qml</file>
         <file>toolbars/DynamicToolBar.qml</file>
         <file>icons/left.svg</file>
+        <file>views/CenteringGridView.qml</file>
+        <file>components/BottomRoundButton.qml</file>
+        <file>toolbars/DynamicSearchBar.qml</file>
     </qresource>
 </RCC>

@@ -1,8 +1,7 @@
 #include "ingredientsmodel.h"
 
-IngredientsModel::IngredientsModel(QObject *parent) : QAbstractListModel(parent)
-{
-
+IngredientsModel::IngredientsModel(QObject *parent) :
+    QAbstractListModel(parent), m_searchMode(false) {
 }
 
 QHash<int, QByteArray> IngredientsModel::roleNames() const {
@@ -56,7 +55,27 @@ void IngredientsModel::linkUp(NetworkManager *nm, QString id) {
     connect(nm, SIGNAL(recieved_delete_ingredient(QString,QString)),
             this, SLOT(process_delete_ingredient(QString)));
 
+    connect(nm, SIGNAL(recieved_search_ingredients(QList<DSIngredient>,QString)),
+            this, SLOT(process_recieved_searched_ingredients(QList<DSIngredient>,QString)));
+
     this->reload();
+}
+
+void IngredientsModel::initiateSearchMode() {
+    m_searchMode = true; emit searchModeChanged();
+//    this->clear();
+}
+
+void IngredientsModel::endSearchMode() {
+    m_searchMode = false; emit searchModeChanged();
+    this->clear();
+    nManager->get_all_ingredients(nid);
+}
+
+void IngredientsModel::search(QString v) {
+    this->clear();
+    if (v.size() == 0) return;
+    nManager->search_ingredients(v, nid);
 }
 
 void IngredientsModel::reloadData(QList<DSIngredient> mList)
@@ -69,6 +88,7 @@ void IngredientsModel::reloadData(QList<DSIngredient> mList)
 
 void IngredientsModel::reload() {
     if (nManager == nullptr) return;
+    this->clear();
     nManager->get_all_ingredients(nid);
 }
 
@@ -80,13 +100,27 @@ void IngredientsModel::clear() {
 }
 
 void IngredientsModel::process_recieved_ingredients(QList<DSIngredient> list, QString id) {
-    if (id != nid) return;
+    if (id != nid || m_searchMode) return;
+    this->reloadData(list);
+}
+
+void IngredientsModel::process_recieved_searched_ingredients(QList<DSIngredient> list, QString id) {
+    qDebug() << "GOT IT! (" << list.size() << "results )";
+    qDebug() << "IS SEARCH MODE?" << m_searchMode;
+    qDebug() << "ID? Got:" << id << ", Expected:" << nid;
+    if (id != nid || !m_searchMode) return;
     this->reloadData(list);
 }
 
 void IngredientsModel::process_recieved_ingredient(DSIngredient v) {
+    if (v.name.size() == 0) return;
+    int insertPos = 0;
+
     for (int i = 0; i < m_list.size(); i++) {
-        if (m_list.at(i).name == v.name) {
+        if (v.name > m_list.at(i).name) {
+            insertPos = i+1;
+        }
+        else if (m_list.at(i).name == v.name) {
             beginRemoveRows(QModelIndex(), i, i);
             m_list.removeAt(i);
             endRemoveRows();
@@ -96,8 +130,9 @@ void IngredientsModel::process_recieved_ingredient(DSIngredient v) {
             return;
         }
     }
-    beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-    m_list.append(v);
+    if (m_searchMode) return;
+    beginInsertRows(QModelIndex(), insertPos, insertPos);
+    m_list.insert(insertPos, v);
     endInsertRows();
 }
 

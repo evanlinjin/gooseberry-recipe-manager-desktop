@@ -3,32 +3,71 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
 import Gooseberry 1.0
+import "../components"
+import "../toolbars"
+import "../views"
 import "../"
 
-PaneGridPage {
-    id: ingredientsPane
+Page {
+    id: page
     anchors.fill: parent
-    titleLabel: "Ingredients"
-    handleType: "Ingredient"
     objectName: "__ingredients__"
 
-    model: mainIngredientsModel
-    delegate: ingredientDelegate
+    header: Loader {
+        id: hLoader
+        sourceComponent: mainIngredientsModel.searchMode ? dynamicSB : dynamicTB
+    }
 
-//    cellWidth: 210
-    cellWidth: implicitWidth*2 > width ? width : implicitWidth
-    cellHeight: 80
+    Component {
+        id: dynamicTB
+        DynamicToolBar {
+            leftButtonVisible: !showLeftToolbar
+            leftButtonIcon: "contents"
+            leftButtonToolTip: "Menu"
+            leftButtonTrigger: function() {drawer.open()}
+            headerText: "Ingredients"
+            showReload: true
+            reloadTrigger: mainIngredientsModel.reload
+            showSearch: true
+            searchTrigger: mainIngredientsModel.initiateSearchMode
+        }
+    }
 
-    reloadTrigger: mainIngredientsModel.reload
-    addTrigger: openEditIngredient
+    Component {
+        id: dynamicSB
+        DynamicSearchBar {
+            leftButtonVisible: !showLeftToolbar
+            leftButtonIcon: "contents"
+            leftButtonToolTip: "Menu"
+            leftButtonTrigger: function() {drawer.open()}
+            searchTrigger: mainIngredientsModel.search
+            closeTrigger: mainIngredientsModel.endSearchMode
+        }
+    }
+
+    CenteringGridView {
+        id: gridView
+        delegate: ingredientDelegate
+        model: mainIngredientsModel
+        implicitWidth: 220
+        cellWidth: implicitWidth*2 > page.width ? page.width : implicitWidth
+        cellHeight: 80
+    }
 
     Component {
         id: ingredientDelegate
         IngredientsItemDelegate{
-            width: ingredientsPane.cellWidth
-            height: ingredientsPane.cellHeight
-
+            width: gridView.cellWidth
+            height: gridView.cellHeight
         }
     }
+
+    BottomRoundButton {
+        iconName: "add"
+//        z: listView.z + 10
+        ToolTip.text: "Add "
+        onClicked: openEditIngredient()
+    }
+
     Separator{}
 }

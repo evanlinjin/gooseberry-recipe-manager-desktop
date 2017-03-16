@@ -56,6 +56,8 @@ void NetworkManager::handleReply(QNetworkReply* reply) {
         process_add_ingredient(v, id);
     else if (cmd == QString(CMD_DELETE_INGREDIENT))
         process_delete_ingredient(v, id);
+    else if (cmd == QString(CMD_SEARCH_INGREDIENTS))
+        process_search_ingredients(v, id);
 }
 
 /* PRIVATE FUNCTIONS : INGREDIENTS */

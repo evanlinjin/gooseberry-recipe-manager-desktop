@@ -91,7 +91,7 @@ Page {
             property alias nameInput: name_input.text
             property alias descInput: desc_input.text
 
-            Label {text: "Name"; font.bold: true;}
+            Label {text: "Name"; font.bold: true; visible: !m.editMode}
 
             TitleTextField {
                 id: name_input
@@ -173,8 +173,6 @@ Page {
 
     Dialog {
         id: conversionDialog
-        //        height: parent.height
-        //        width: parent.width
         x: parent.width/2 - width/2
         y: parent.height/3 - width/3
         modal: true
@@ -207,7 +205,6 @@ Page {
         GridLayout {
             id: dialogGrid
             columns: 3
-//            rowSpacing: 0
             Layout.fillWidth: true
 
             DoubleTextField {

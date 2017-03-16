@@ -114,4 +114,16 @@ ApplicationWindow {
         // reset properties.
         mainSelectedIngredient = ""
     }
+
+    Component.onCompleted: {
+        NetworkManager.onRecieved_error.connect(printErr)
+    }
+
+
+
+    function printErr(cmd, msg) {
+        console.log("[GOT ERROR FROM SERVER]\n\n\tFOR CMD:", cmd,
+                    "\n\tERROR MESSAGE:\n", msg)
+        console.log("[END ERROR FROM SERVER]\n")
+    }
 }
