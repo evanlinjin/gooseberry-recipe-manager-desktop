@@ -9,6 +9,7 @@
 #define CMD_MODIFY_INGREDIENT "modify_ingredient"
 #define CMD_ADD_INGREDIENT "add_ingredient"
 #define CMD_DELETE_INGREDIENT "delete_ingredient"
+#define CMD_SEARCH_INGREDIENTS "search_ingredients"
 
 #define TYPE_WEIGHT "weight"
 #define TYPE_VOLUME "volume"

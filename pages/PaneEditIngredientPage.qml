@@ -16,6 +16,7 @@ Page {
     BusyIndicator {
         anchors.centerIn: parent
         running: !m.ready
+        z: layoutFields.z + 100
     }
 
     header: DynamicToolBar {
@@ -36,6 +37,7 @@ Page {
     }
 
     Flickable {
+        id: flickable
         anchors.fill: parent
         clip: true
         contentHeight: layoutFields.height + layoutFields.spacing*2

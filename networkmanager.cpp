@@ -8,7 +8,7 @@ NetworkManager::NetworkManager(QString url, QString token, QObject *parent) :
             this, SLOT(handleReply(QNetworkReply*)));
 }
 
-void NetworkManager::handleRequest(QString cmd, QJsonValue v, QString id) {
+void NetworkManager::handleRequest(QString cmd, QJsonValue v, QString &id) {
     if (m_cmds.add(cmd) == false) return;
 
     QNetworkRequest nReq;
@@ -33,10 +33,10 @@ void NetworkManager::handleReply(QNetworkReply* reply) {
     m_cmds.remove(cmd);
 
     // get id.
-    auto id = replies[reply];
+    QString id = replies[reply];
     replies.remove(reply);
 
-    auto v = obj["data"];
+    QJsonValue v = obj["data"];
 
     auto status = obj["status"].toString();
     if (status == QString(STATUS_ERROR)) emit recieved_error(cmd, v.toString());
@@ -58,13 +58,51 @@ void NetworkManager::handleReply(QNetworkReply* reply) {
         process_delete_ingredient(v, id);
 }
 
+/* PRIVATE FUNCTIONS : INGREDIENTS */
+
+void NetworkManager::getIngredientList(QJsonValue &v, QList<DSIngredient> &vArray) {
+    auto dataArray = v.toArray();
+
+    for (int i = 0; i < dataArray.size(); i++) {
+        auto d = dataArray.at(i);
+        DSIngredient v;
+        this->getIngredient(d, v);
+        vArray.append(v);
+    }
+}
+
+void NetworkManager::getIngredient(QJsonValue &v, DSIngredient &vItem) {
+    auto d = v.toObject();
+
+    vItem.name = d["name"].toString();
+    vItem.description = d["description"].toString();
+    vItem.kg_per_cup = d["kg_per_cup"].toDouble();
+
+    QJsonArray tags = d["tags"].toArray();
+    for (int j = 0; j < tags.size(); j++) {
+        vItem.tags.append(tags.at(j).toString());
+    }
+}
+
+void NetworkManager::getIngredientJsonObj(DSIngredient &v, QJsonObject &obj) {
+    obj["name"] = v.name;
+    obj["description"] = v.description;
+    obj["kg_per_cup"] = v.kg_per_cup;
+    QJsonArray tags;
+    for (int i = 0; i < v.tags.size(); i++) {
+        tags.append(v.tags.at(i));
+    }
+    obj["tags"] = tags;
+}
+
+
 /* COMMAND : GET_MEASUREMENTS */
 
 void NetworkManager::get_measurements(QString id) {
     this->handleRequest(CMD_GET_MEASUREMENTS, 0, id);
 }
 
-void NetworkManager::process_measurements(QJsonValue v, QString id) {
+void NetworkManager::process_measurements(QJsonValue &v, QString &id) {
     QList<DSMeasurement> mArray;
     auto dataArray = v.toArray();
     qDebug() << "::: MEASUREMENTS >>>";
@@ -88,24 +126,9 @@ void NetworkManager::get_all_ingredients(QString id) {
     this->handleRequest(CMD_GET_ALL_INGREDIENTS, 0, id);
 }
 
-void NetworkManager::process_get_all_ingredients(QJsonValue v, QString id) {
+void NetworkManager::process_get_all_ingredients(QJsonValue &v, QString &id) {
     QList<DSIngredient> vArray;
-    auto dataArray = v.toArray();
-//    qDebug() << "::: INGREDIENTS >>>";
-    for (int i = 0; i < dataArray.size(); i++) {
-        auto d = dataArray.at(i).toObject();
-        DSIngredient v;
-        v.name = d["name"].toString();
-        v.description = d["description"].toString();
-        v.kg_per_cup = d["kg_per_cup"].toDouble();
-        QJsonArray tags = d["tags"].toArray();
-        for (int j = 0; j < tags.size(); j++) {
-            v.tags.append(tags.at(j).toString());
-        }
-//        qDebug() << "\t" << v.name << v.tags << v.kg_per_cup << v.description;
-        vArray.append(v);
-    }
-//    qDebug() << "";
+    getIngredientList(v, vArray);
     emit recieved_get_all_ingredients(vArray, id);
 }
 
@@ -115,20 +138,10 @@ void NetworkManager::get_ingredient_of_key(QString key, QString id) {
     this->handleRequest(CMD_GET_INGREDIENT_OF_KEY, key, id);
 }
 
-void NetworkManager::process_get_ingredient_of_key(QJsonValue v, QString id) {
-    auto d = v.toObject();
-    {
-        DSIngredient v;
-        v.name = d["name"].toString();
-        v.description = d["description"].toString();
-        v.kg_per_cup = d["kg_per_cup"].toDouble();
-        QJsonArray tags = d["tags"].toArray();
-        for (int j = 0; j < tags.size(); j++) {
-            v.tags.append(tags.at(j).toString());
-        }
-        qDebug() << "[NetworkManager::process_get_ingredient_of_key]" << v.name << v.tags << v.kg_per_cup << v.description;
-        emit recieved_get_ingredient_of_key(v, id);
-    }
+void NetworkManager::process_get_ingredient_of_key(QJsonValue &v, QString &id) {
+    DSIngredient vItem;
+    this->getIngredient(v, vItem);
+    emit recieved_get_ingredient_of_key(vItem, id);
 }
 
 /* COMMAND : MODIFY_INGREDIENT */
@@ -146,20 +159,10 @@ void NetworkManager::modify_ingredient(DSIngredient v, QString id) {
     this->handleRequest(CMD_MODIFY_INGREDIENT, obj, id);
 }
 
-void NetworkManager::process_modify_ingredient(QJsonValue v, QString id) {
-    auto d = v.toObject();
-    {
-        DSIngredient v;
-        v.name = d["name"].toString();
-        v.description = d["description"].toString();
-        v.kg_per_cup = d["kg_per_cup"].toDouble();
-        QJsonArray tags = d["tags"].toArray();
-        for (int j = 0; j < tags.size(); j++) {
-            v.tags.append(tags.at(j).toString());
-        }
-        qDebug() << "[NetworkManager::process_modify_ingredient]" << v.name << v.tags << v.kg_per_cup << v.description;
-        emit recieved_modify_ingredient(v, id);
-    }
+void NetworkManager::process_modify_ingredient(QJsonValue &v, QString &id) {
+    DSIngredient vItem;
+    this->getIngredient(v, vItem);
+    emit recieved_modify_ingredient(vItem, id);
 }
 
 /* COMMAND : ADD_INGREDIENT */
@@ -177,20 +180,10 @@ void NetworkManager::add_ingredient(DSIngredient v, QString id) {
     this->handleRequest(CMD_ADD_INGREDIENT, obj, id);
 }
 
-void NetworkManager::process_add_ingredient(QJsonValue v, QString id) {
-    auto d = v.toObject();
-    {
-        DSIngredient v;
-        v.name = d["name"].toString();
-        v.description = d["description"].toString();
-        v.kg_per_cup = d["kg_per_cup"].toDouble();
-        QJsonArray tags = d["tags"].toArray();
-        for (int j = 0; j < tags.size(); j++) {
-            v.tags.append(tags.at(j).toString());
-        }
-        qDebug() << "[NetworkManager::process_add_ingredient]" << v.name << v.tags << v.kg_per_cup << v.description;
-        emit recieved_add_ingredient(v, id);
-    }
+void NetworkManager::process_add_ingredient(QJsonValue &v, QString &id) {
+    DSIngredient vItem;
+    this->getIngredient(v, vItem);
+    emit recieved_add_ingredient(vItem, id);
 }
 
 /* COMMAND : DELETE_INGREDIENT */
@@ -199,8 +192,19 @@ void NetworkManager::delete_ingredient(QString v, QString id) {
     this->handleRequest(CMD_DELETE_INGREDIENT, v, id);
 }
 
-void NetworkManager::process_delete_ingredient(QJsonValue v, QString id) {
+void NetworkManager::process_delete_ingredient(QJsonValue &v, QString &id) {
     auto str = v.toString();
-    qDebug() << "[NetworkManager::process_delete_ingredient]" << str;
     emit recieved_delete_ingredient(str, id);
+}
+
+/* COMMAND : SEARCH_INGREDIENTS */
+
+void NetworkManager::search_ingredients(QString v, QString id) {
+    this->handleRequest(CMD_SEARCH_INGREDIENTS, v, id);
+}
+
+void NetworkManager::process_search_ingredients(QJsonValue &v, QString &id) {
+    QList<DSIngredient> vArray;
+    this->getIngredientList(v, vArray);
+    emit recieved_search_ingredients(vArray, id);
 }

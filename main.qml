@@ -80,9 +80,6 @@ ApplicationWindow {
     Component {id: ingredientEditPane; PaneEditIngredientPage{} }
     Component {id: measurementsPane; PaneMeasurementsPage{} }
 
-
-//    MeasurementsWindow{id: measurementsWindow}
-
     MeasurementsModel {
         id: mainMeasurementsModel
         Component.onCompleted: linkUp(NetworkManager, "main_measurements_model")
