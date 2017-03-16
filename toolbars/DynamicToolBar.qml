@@ -31,6 +31,8 @@ ToolBar {
 
     Material.elevation: 1
     height: 55
+    Material.primary: "white"
+    Material.foreground: "black"
 
     RowLayout {
         anchors.centerIn: parent
@@ -40,9 +42,9 @@ ToolBar {
 
         IconToolButton {
             id: leftButton
-            iconName: ""
+            iconName: "back"
             ToolTip.text: leftButtonToolTip
-            visible: iconName != ""
+            visible: false
             onClicked: leftButtonTrigger()
         }
 

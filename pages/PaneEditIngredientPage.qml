@@ -31,45 +31,8 @@ Page {
         showDelete: m.editMode
         deleteTrigger: m.deleteIngredient
 
-        showSubmit: true
+        showSubmit: m.name != ""
         submitTrigger: m.submitChanges
-
-//        RowLayout {
-//            anchors.centerIn: parent
-//            height: parent.height
-//            width: (parent.width < maxWidth ? parent.width : maxWidth)
-
-//            IconToolButton {
-//                iconName: /*twoPanePossible ? "close" : */"back"
-//                ToolTip.text: twoPanePossible ? "Close" : "Back"
-//                ToolTip.visible: hovered
-//                onClicked: closeRightPane()
-//            }
-
-//            HeaderLabel {
-//                text: m.editMode ? m.name : "New Ingredient"
-//            }
-
-//            IconToolButton {
-//                iconName: "revert"
-//                ToolTip.text: "Revert Changes"
-//                onClicked: m.revertChanges()
-//                enabled: m.editMode
-//            }
-
-//            IconToolButton {
-//                iconName: "delete"
-//                ToolTip.text: "Delete Ingredient"
-//                onClicked: m.deleteIngredient()
-//                enabled: m.editMode
-//            }
-
-//            IconToolButton {
-//                iconName: "tick"
-//                ToolTip.text: "Submit Changes"
-//                onClicked: {m.submitChanges()}
-//            }
-//        }
     }
 
     Flickable {
@@ -131,7 +94,7 @@ Page {
             TitleTextField {
                 id: name_input
                 placeholderText: "Name"
-                enabled: !m.editMode
+                visible: !m.editMode
             }
 
             Label {text: "\nDescription"; font.bold: true;}
@@ -175,6 +138,7 @@ Page {
                     placeholderText: "Add tag..."
                     Layout.fillWidth: true
                     validator: RegExpValidator {regExp: /^[a-z]+$/}
+                    inputMethodHints: Qt.ImhLowercaseOnly
                     onAccepted: {m.addTag(text); clear()}
                 }
 
@@ -241,7 +205,7 @@ Page {
         GridLayout {
             id: dialogGrid
             columns: 3
-            rowSpacing: 0
+//            rowSpacing: 0
             Layout.fillWidth: true
 
             DoubleTextField {
@@ -289,6 +253,8 @@ Page {
 
             nameGroup.item.descInput = desc
             desc = Qt.binding(function() {return nameGroup.item.descInput})
+
+            mainSelectedIngredient = name
         }
     }
 

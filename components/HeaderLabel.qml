@@ -3,7 +3,7 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 
 Label {
-    text: m_name
+//    text: m_name
     elide: Label.ElideRight
     font.capitalization: Font.AllUppercase
     font.bold: true

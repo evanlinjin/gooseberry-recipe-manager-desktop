@@ -15,7 +15,6 @@
         <file>icons/info.svg</file>
         <file>icons/people.svg</file>
         <file>icons/settings.svg</file>
-        <file>MainMenu.qml</file>
         <file>MeasurementsLabel.qml</file>
         <file>Separator.qml</file>
         <file>menus/HelpMenu.qml</file>

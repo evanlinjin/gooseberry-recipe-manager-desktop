@@ -15,7 +15,8 @@ PaneGridPage {
     model: mainIngredientsModel
     delegate: ingredientDelegate
 
-    cellWidth: 210
+//    cellWidth: 210
+    cellWidth: implicitWidth*2 > width ? width : implicitWidth
     cellHeight: 80
 
     reloadTrigger: mainIngredientsModel.reload
@@ -26,6 +27,7 @@ PaneGridPage {
         IngredientsItemDelegate{
             width: ingredientsPane.cellWidth
             height: ingredientsPane.cellHeight
+
         }
     }
     Separator{}

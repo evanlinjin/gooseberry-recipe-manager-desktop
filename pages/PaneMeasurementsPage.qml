@@ -24,7 +24,7 @@ Page {
 
     objectName: "__measurements__"
 
-    ToolBar {
+    DynamicToolBar {
         id: toolbar
         anchors.top: parent.top
         anchors.left: parent.left
@@ -85,16 +85,16 @@ Page {
         }
     }
 
-    RowLayout {
-        anchors.centerIn: parent
-        height: parent.height
-        width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
-        Item{Layout.fillWidth: true}
-        Separator{anchors.right: undefined; Material.elevation: 1; Material.background: "black"; opacity: 0.1}
-        Item{Layout.fillWidth: true}
-        Separator{anchors.right: undefined; Material.elevation: 1; Material.background: "black"; opacity: 0.1}
-        Item{Layout.fillWidth: true}
-        Separator{anchors.right: undefined; Material.elevation: 1; Material.background: "black"; opacity: 0.1}
-        Item{Layout.fillWidth: true}
-    }
+//    RowLayout {
+//        anchors.centerIn: parent
+//        height: parent.height
+//        width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
+//        Item{Layout.fillWidth: true}
+//        Separator{anchors.right: undefined; Material.elevation: 1; Material.background: "black"; opacity: 0.1}
+//        Item{Layout.fillWidth: true}
+//        Separator{anchors.right: undefined; Material.elevation: 1; Material.background: "black"; opacity: 0.1}
+//        Item{Layout.fillWidth: true}
+//        Separator{anchors.right: undefined; Material.elevation: 1; Material.background: "black"; opacity: 0.1}
+//        Item{Layout.fillWidth: true}
+//    }
 }

@@ -12,6 +12,8 @@ ApplicationWindow {
     minimumWidth: 280; minimumHeight: 280
     title: qsTr("Dash - Recipe Manager")
 
+    // For dynamic layout >>>
+
     property int maxWidth: 1024
 
     property int leftToolbarWidth: 65
@@ -25,6 +27,10 @@ ApplicationWindow {
     property bool showLeftToolbar: twoPanePossible
     property bool showLeftPane: twoPanePossible || !rightPaneOpen
     property bool showRightPane: rightPaneOpen
+
+    // For Selection >>>
+
+    property string mainSelectedIngredient: ""
 
     GridLayout {
         id: mainGrid
@@ -61,7 +67,7 @@ ApplicationWindow {
 
     Drawer {
         id: drawer
-        width: showLeftToolbar ? 0 : (leftToolbarMaxWidth > mainWindow.width ? mainWindow.width : leftToolbarMaxWidth)
+        width: showLeftToolbar ? 0 : (leftToolbarMaxWidth*1.2 > mainWindow.width ? mainWindow.width : leftToolbarMaxWidth*1.2)
         height: showLeftToolbar ? 0 : mainWindow.height
         Loader {
             anchors.fill: parent
@@ -107,5 +113,8 @@ ApplicationWindow {
         drawer.close()
         rightPaneLoader.sourceComponent = null
         rightPaneOpen = false
+
+        // reset properties.
+        mainSelectedIngredient = ""
     }
 }

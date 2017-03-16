@@ -39,7 +39,10 @@ public slots:
     void clear();
 
 private slots:
-    void process_recieved_measurements(QList<DSIngredient> list, QString id);
+    void process_recieved_ingredients(QList<DSIngredient> list, QString id);
+    void process_recieved_ingredient(DSIngredient v);
+    void process_delete_ingredient(QString v);
+
     void reloadData(QList<DSIngredient> mList);
 };
 
