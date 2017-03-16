@@ -43,7 +43,7 @@ ApplicationWindow {
         }
         Loader{
             id: leftPaneLoader
-            sourceComponent: Component{Page{header: ToolBar{Material.elevation: 1}}}
+            sourceComponent: ingredientsPane
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.maximumWidth: showRightPane ? leftPaneMinWidth : -1
@@ -61,7 +61,7 @@ ApplicationWindow {
 
     Drawer {
         id: drawer
-        width: showLeftToolbar ? 0 : (leftToolbarMaxWidth*1.5 > mainWindow.width ? mainWindow.width : leftToolbarMaxWidth*1.5)
+        width: showLeftToolbar ? 0 : (leftToolbarMaxWidth > mainWindow.width ? mainWindow.width : leftToolbarMaxWidth)
         height: showLeftToolbar ? 0 : mainWindow.height
         Loader {
             anchors.fill: parent

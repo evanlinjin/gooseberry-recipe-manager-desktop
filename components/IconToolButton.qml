@@ -1,6 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.1
+
 import "../"
 
 ToolButton {
@@ -18,6 +20,8 @@ ToolButton {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         opacity: parent.enabled ? 1 : 0.2
+        overlay: true
+        color: Material.foreground
     }
 
 }

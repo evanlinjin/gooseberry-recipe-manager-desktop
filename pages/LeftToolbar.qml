@@ -4,45 +4,19 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
 import Gooseberry 1.0
 import "../components"
+import "../toolbars"
 import "../"
 
 Page{
-    header: ToolBar {
-        Material.elevation: 1
-        RowLayout {
-            anchors.fill: parent
+    header: DynamicToolBar {
+        leftButtonVisible: !showLeftToolbar
+        leftButtonIcon: "back"
+        leftButtonToolTip: "Back"
+        leftButtonTrigger: drawer.close
 
-            IconToolButton {
-                id: closeButton
-                iconName: "back"
-                onClicked: drawer.close()
-                visible: !showLeftToolbar
-                Layout.fillHeight: true
-                ToolTip.text: "Back"
-            }
-
-            Item {height: 5; width: 5; visible: !closeButton.visible}
-
-            ColumnLayout {
-                spacing: 0
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                HeaderLabel {
-                    id: ingredientName
-                    text: "Recipe Manager"
-                    visible: !rightPaneOpen
-                }
-                HeaderLabel {
-                    text: "Menu"
-                    opacity: 0.7
-                    font.pixelSize: ingredientName.font.pixelSize*4/5
-                    horizontalAlignment: rightPaneOpen ? Label.AlignHCenter : Label.AlignLeft
-                }
-            }
-        }
-
-
+        headerText: "Menu"
     }
+
     ListView {
         anchors.fill: parent
         model: VisualItemModel {

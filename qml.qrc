@@ -47,5 +47,7 @@
         <file>components/LeftToolbarDelegate.qml</file>
         <file>pages/PaneMeasurementsPage.qml</file>
         <file>components/DynamicFrame.qml</file>
+        <file>toolbars/DynamicToolBar.qml</file>
+        <file>icons/left.svg</file>
     </qresource>
 </RCC>

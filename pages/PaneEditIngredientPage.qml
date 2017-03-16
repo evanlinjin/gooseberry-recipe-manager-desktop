@@ -5,6 +5,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls.Material 2.1
 import Gooseberry 1.0
 import "../components"
+import "../toolbars"
 import "../"
 
 Page {
@@ -17,55 +18,58 @@ Page {
         running: !m.ready
     }
 
-    header: ToolBar {
-        Material.elevation: 1
-        RowLayout {
-            anchors.centerIn: parent
-            height: parent.height
-            width: (parent.width < maxWidth ? parent.width : maxWidth)
+    header: DynamicToolBar {
+        leftButtonVisible: true
+        leftButtonIcon: "back"
+        leftButtonToolTip: "Back"
+        leftButtonTrigger: closeRightPane
+        headerText: m.editMode ? m.name : "New Ingredient"
 
-            IconToolButton {
-                iconName: /*twoPanePossible ? "close" : */"back"
-                ToolTip.text: twoPanePossible ? "Close" : "Back"
-                ToolTip.visible: hovered
-                onClicked: closeRightPane()
-            }
+        showRevert: m.editMode
+        revertTrigger: m.revertChanges
 
-            HeaderLabel {
-                text: m.editMode ? m.name : "New Ingredient"
-            }
+        showDelete: m.editMode
+        deleteTrigger: m.deleteIngredient
 
-            IconToolButton {
-                iconName: "revert"
-                ToolTip.text: "Revert Changes"
-                onClicked: m.revertChanges()
-                enabled: m.editMode
-            }
+        showSubmit: true
+        submitTrigger: m.submitChanges
 
-            IconToolButton {
-                iconName: "delete"
-                ToolTip.text: "Delete Ingredient"
-                onClicked: m.deleteIngredient()
-                enabled: m.editMode
-            }
+//        RowLayout {
+//            anchors.centerIn: parent
+//            height: parent.height
+//            width: (parent.width < maxWidth ? parent.width : maxWidth)
 
-            //            IconToolButton {
-            //                iconName: "tick"
-            //                ToolTip.text: "Submit Changes"
-            //                onClicked: {m.submitChanges()}
-            //            }
-            //            ToolButton {
-            //                text: "Delete"
-            //                onClicked: m.deleteIngredient()
-            //                enabled: m.editMode
-            //            }
+//            IconToolButton {
+//                iconName: /*twoPanePossible ? "close" : */"back"
+//                ToolTip.text: twoPanePossible ? "Close" : "Back"
+//                ToolTip.visible: hovered
+//                onClicked: closeRightPane()
+//            }
 
-            ToolButton {
-                text: "Save"
-                onClicked: m.submitChanges()
-            }
-            Item{width: 1; height: 1}
-        }
+//            HeaderLabel {
+//                text: m.editMode ? m.name : "New Ingredient"
+//            }
+
+//            IconToolButton {
+//                iconName: "revert"
+//                ToolTip.text: "Revert Changes"
+//                onClicked: m.revertChanges()
+//                enabled: m.editMode
+//            }
+
+//            IconToolButton {
+//                iconName: "delete"
+//                ToolTip.text: "Delete Ingredient"
+//                onClicked: m.deleteIngredient()
+//                enabled: m.editMode
+//            }
+
+//            IconToolButton {
+//                iconName: "tick"
+//                ToolTip.text: "Submit Changes"
+//                onClicked: {m.submitChanges()}
+//            }
+//        }
     }
 
     Flickable {

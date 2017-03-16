@@ -13,7 +13,7 @@ Item {
 
     Image {
         id: image
-        width: 16
+        width: 18
         height: width
         smooth: true
 //        mipmap: true

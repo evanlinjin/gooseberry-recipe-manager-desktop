@@ -4,36 +4,22 @@ import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import QtQuick.Controls.Material 2.1
 import "../components"
+import "../toolbars"
 import "../"
 
 Page {
     id: panePage
     anchors.fill: parent
-    header: ToolBar {
-        Material.elevation: 1
-        RowLayout {
-            anchors.centerIn: parent
-//            anchors.horizontalCenterOffset: spacing
-            height: parent.height
-            width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
+    header: DynamicToolBar {
+        leftButtonVisible: !showLeftToolbar
+        leftButtonIcon: "contents"
+        leftButtonToolTip: "Menu"
+        leftButtonTrigger: function() {drawer.open()}
 
-            IconToolButton {
-                id: menuButton
-                iconName: "contents"
-                ToolTip.text: "Menu "
-                visible: !showLeftToolbar
-                onClicked: drawer.open()
-            }
-            HeaderLabel {
-                text: "Measurements"
-            }
-            IconToolButton {
-                id: reloadButton
-                iconName: "refresh"
-                ToolTip.text: "Reload"
-                onClicked: mainMeasurementsModel.reload()
-            }
-        }
+        showReload: true
+        reloadTrigger: mainMeasurementsModel.reload
+
+        headerText: "Measurements"
     }
 
     objectName: "__measurements__"

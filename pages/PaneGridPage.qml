@@ -3,13 +3,14 @@ import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
 import "../components"
+import "../toolbars"
 import "../"
 
 Page {
     id: panePage
     height: parent ? parent.height : 0
     width: parent ? parent.width/3 - parent.spacing : 0
-    property alias titleLabel: titleLabel.text
+    property alias titleLabel: dynamicTB.headerText
     property string handleType: ""
     property alias cellHeight: listView.cellHeight
     property alias cellWidth: listView.cellWidth
@@ -17,41 +18,19 @@ Page {
     property alias delegate: listView.delegate
 
     property var addTrigger: function(){}
-    property var reloadTrigger: function(){}
-    property var searchTrigger: function(){}
+    property alias reloadTrigger: dynamicTB.reloadTrigger
+    property alias searchTrigger: dynamicTB.searchTrigger
 
-    header: ToolBar {
-        Material.elevation: 1
-        RowLayout {
-            anchors.centerIn: parent
-//            anchors.horizontalCenterOffset: parent.width < maxWidth ? spacing
-            height: parent.height
-            width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
-
-            IconToolButton {
-                id: menuButton
-                iconName: "contents"
-                ToolTip.text: "Menu "
-                visible: !showLeftToolbar
-                onClicked: drawer.open()
-            }
-            HeaderLabel {
-                id: titleLabel
-            }
-            IconToolButton {
-                id: reloadButton
-                iconName: "refresh"
-                ToolTip.text: "Reload " + handleType + "s"
-                onClicked: reloadTrigger()
-            }
-            IconToolButton {
-                id: searchButton
-                iconName: "find"
-                ToolTip.text: "Search " + handleType + "s"
-                onClicked: searchTrigger()
-            }
-        }
+    header: DynamicToolBar {
+        id: dynamicTB
+        leftButtonVisible: !showLeftToolbar
+        leftButtonIcon: "contents"
+        leftButtonToolTip: "Menu"
+        leftButtonTrigger: function() {drawer.open()}
+        showReload: true
+        showSearch: true
     }
+
     RoundButton {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
