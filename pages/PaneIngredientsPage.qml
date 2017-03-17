@@ -21,15 +21,31 @@ Page {
     Component {
         id: dynamicTB
         DynamicToolBar {
-            leftButtonVisible: !showLeftToolbar
-            leftButtonIcon: "contents"
-            leftButtonToolTip: "Menu"
-            leftButtonTrigger: function() {drawer.open()}
-            headerText: "Ingredients"
-            showReload: true
-            reloadTrigger: mainIngredientsModel.reload
-            showSearch: true
-            searchTrigger: mainIngredientsModel.initiateSearchMode
+            component: RowLayout {
+                IconToolButton {
+                    id: menuButton
+                    iconName: "contents"
+                    ToolTip.text: "Menu"
+                    visible: !showLeftToolbar
+                    onClicked: drawer.open()
+                }
+                Spacer {
+                    visible: !menuButton.visible
+                }
+                HeaderLabel {
+                    text: "Ingredients"
+                }
+                IconToolButton {
+                    iconName: "refresh"
+                    ToolTip.text: "Reload"
+                    onClicked: mainIngredientsModel.reload()
+                }
+                IconToolButton {
+                    iconName: "find"
+                    ToolTip.text: "Search"
+                    onClicked: mainIngredientsModel.initiateSearchMode()
+                }
+            }
         }
     }
 
@@ -64,8 +80,7 @@ Page {
 
     BottomRoundButton {
         iconName: "add"
-//        z: listView.z + 10
-        ToolTip.text: "Add "
+        ToolTip.text: "New Ingredient"
         onClicked: openEditIngredient()
     }
 

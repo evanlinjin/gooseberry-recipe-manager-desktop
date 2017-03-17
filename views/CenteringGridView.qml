@@ -19,13 +19,13 @@ GridView {
         anchors.right: grid.right
         anchors.rightMargin: -((grid.parent.width - grid.width)/2)
     }
-    populate: Transition {
-        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
-    }
-    add: Transition {
-        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
-    }
-    remove: Transition {
-        NumberAnimation { properties: "opacity"; from: 1; to: 0; duration: 220 }
-    }
+//    populate: Transition {
+//        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
+//    }
+//    add: Transition {
+//        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 220 }
+//    }
+//    remove: Transition {
+//        NumberAnimation { properties: "opacity"; from: 1; to: 0; duration: 220 }
+//    }
 }

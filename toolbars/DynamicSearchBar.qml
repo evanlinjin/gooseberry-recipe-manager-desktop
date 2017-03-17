@@ -16,14 +16,15 @@ ToolBar {
 
     Material.elevation: 1
     height: 55
-    Material.primary: "white"
-    Material.foreground: "black"
+    Material.primary: Material.background
+    ColumnLayout {
+        anchors.fill: parent
 
     RowLayout {
-        anchors.centerIn: parent
-        anchors.horizontalCenterOffset: parent.width < maxWidth ? 0 : spacing
-        height: parent.height
-        width: (parent.width < maxWidth ? parent.width : maxWidth) - spacing*2
+        Layout.maximumWidth: maxWidth
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        Layout.alignment: Layout.Center
 
         IconToolButton {
             id: leftButton
@@ -39,11 +40,13 @@ ToolBar {
             id: searchField
             Layout.fillHeight: true
             Layout.fillWidth: true
-            placeholderText: "Search ingredients..."
+            Layout.topMargin: 10
+            placeholderText: "Search ingredients"
             onAccepted: searchTrigger(text)
             focus: true
             activeFocusOnTab: true
             Component.onCompleted: forceActiveFocus()
+            background: Item{anchors.fill: searchField}
         }
 
         IconToolButton {
@@ -53,4 +56,5 @@ ToolBar {
             onClicked: closeTrigger()
         }
     }
+}
 }

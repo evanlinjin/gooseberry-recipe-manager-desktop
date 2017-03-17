@@ -32,7 +32,6 @@
         <file>icons/delete.svg</file>
         <file>icons/revert.svg</file>
         <file>components/TitleTextField.qml</file>
-        <file>pages/PaneGridPage.qml</file>
         <file>pages/PaneIngredientsPage.qml</file>
         <file>pages/PaneEditIngredientPage.qml</file>
         <file>pages/LeftToolbar.qml</file>
@@ -51,5 +50,6 @@
         <file>views/CenteringGridView.qml</file>
         <file>components/BottomRoundButton.qml</file>
         <file>toolbars/DynamicSearchBar.qml</file>
+        <file>components/Spacer.qml</file>
     </qresource>
 </RCC>

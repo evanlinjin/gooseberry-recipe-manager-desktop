@@ -11,15 +11,15 @@ Page {
     id: panePage
     anchors.fill: parent
     header: DynamicToolBar {
-        leftButtonVisible: !showLeftToolbar
-        leftButtonIcon: "contents"
-        leftButtonToolTip: "Menu"
-        leftButtonTrigger: function() {drawer.open()}
+//        leftButtonVisible: !showLeftToolbar
+//        leftButtonIcon: "contents"
+//        leftButtonToolTip: "Menu"
+//        leftButtonTrigger: function() {drawer.open()}
 
-        showReload: true
-        reloadTrigger: mainMeasurementsModel.reload
+//        showReload: true
+//        reloadTrigger: mainMeasurementsModel.reload
 
-        headerText: "Measurements"
+//        headerText: "Measurements"
     }
 
     objectName: "__measurements__"

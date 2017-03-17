@@ -13,76 +13,87 @@ Page {
     anchors.fill: parent
     enabled: m.ready
 
+    header: DynamicToolBar {
+        component: RowLayout {
+            IconToolButton {
+                iconName: "back"
+                ToolTip.text: "Back"
+                onClicked: closeRightPane()
+            }
+            HeaderLabel {
+                text: m.editMode ? m.name : "New Ingredient"
+            }
+            IconToolButton {
+                iconName: "delete"
+                ToolTip.text: "Delete"
+                visible: m.editMode
+                onClicked: deleteDialog.open()
+            }
+            IconToolButton {
+                iconName: "refresh"
+                ToolTip.text: "Refresh"
+                visible: m.editMode
+                onClicked: m.revertChanges()
+            }
+            IconToolButton {
+                iconName: "tick"
+                ToolTip.text: "Done"
+                enabled: m.name != ""
+                onClicked: {m.submitChanges(); if (!twoPanePossible) closeRightPane()}
+            }
+        }
+    }
+
+    ListView {
+        id: flickable
+        anchors.fill: parent
+        clip: true
+        ScrollBar.vertical: ScrollBar {}
+        model: VisualItemModel {
+            ColumnLayout {
+                width: parent.width
+                GridLayout {
+                    id: layoutFields
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.alignment: Layout.Center
+                    Layout.maximumWidth: maxWidth
+
+                    property int maxWidth1: 670
+                    property int maxWidth2: rows === 2 ? maxWidth*2/6 : maxWidth1
+                    property int switchWidth: 210
+                    rows: parent.width > maxWidth - switchWidth ? 2 : -1
+
+                    flow: GridLayout.TopToBottom
+
+                    DynamicFrame {
+                        id: nameGroup
+                        Layout.maximumWidth: parent.maxWidth1
+                        content: nameGroupComponent
+                    }
+
+                    DynamicFrame {
+                        id: tagsGroup
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: parent.maxWidth1
+                        content: tagsGroupComponent
+                    }
+
+                    DynamicFrame {
+                        id: conversionGroup
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: parent.maxWidth2
+                        content: conversionGroupComponent
+                    }
+                }
+            }
+        }
+    }
+
     BusyIndicator {
         anchors.centerIn: parent
         running: !m.ready
         z: layoutFields.z + 100
-    }
-
-    header: DynamicToolBar {
-        leftButtonVisible: true
-        leftButtonIcon: "back"
-        leftButtonToolTip: "Back"
-        leftButtonTrigger: closeRightPane
-        headerText: m.editMode ? m.name : "New Ingredient"
-
-        showRevert: m.editMode
-        revertTrigger: m.revertChanges
-
-        showDelete: m.editMode
-        deleteTrigger: m.deleteIngredient
-
-        showSubmit: m.name != ""
-        submitTrigger: m.submitChanges
-    }
-
-    Flickable {
-        id: flickable
-        anchors.fill: parent
-        clip: true
-        contentHeight: layoutFields.height + layoutFields.spacing*2
-        ScrollBar.vertical: ScrollBar {}
-
-        GridLayout {
-            id: layoutFields
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.margins: spacing
-            property int spacing: 20
-            property int maxWidth1: 670
-            property int maxWidth2: rows === 2 ? maxWidth*2/6 : maxWidth1
-            property int switchWidth: 210
-            width: (parent.width < maxWidth ? (parent.width < maxWidth1 ? parent.width : (rows == 2 ? parent.width : maxWidth1 ) ) : maxWidth) - spacing*2
-            rows: parent.width > maxWidth - switchWidth ? 2 : -1
-            columnSpacing: spacing
-            rowSpacing: spacing
-
-            flow: GridLayout.TopToBottom
-
-            DynamicFrame {
-                id: nameGroup
-                showFrame: false//layoutFields.rows == 2
-                Layout.maximumWidth: parent.maxWidth1
-                //                Layout.minimumHeight: conversionGroup.height
-                content: nameGroupComponent
-            }
-
-            DynamicFrame {
-                id: tagsGroup
-                showFrame: nameGroup.showFrame
-                Layout.fillWidth: true
-                Layout.maximumWidth: parent.maxWidth1
-                content: tagsGroupComponent
-            }
-
-            DynamicFrame {
-                id: conversionGroup
-                showFrame: nameGroup.showFrame
-                Layout.fillWidth: true
-                Layout.maximumWidth: parent.maxWidth2
-                content: conversionGroupComponent
-            }
-        }
     }
 
     Component {
@@ -240,6 +251,16 @@ Page {
                 Material.elevation: 1
             }
         }
+    }
+
+    Dialog {
+        id: deleteDialog
+        x: parent.width/2 - width/2
+        y: parent.height/3 - width/3
+        title: ("Delete ingredient '%1'?").arg(m.name)
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        onAccepted: {m.deleteIngredient(); closeRightPane()}
     }
 
     IngredientEditWindowModel {

@@ -40,6 +40,7 @@ ApplicationWindow {
         columns: 3
         rows: 1
         Loader{
+            id: toolbarLoader
             sourceComponent: leftToolbarPane
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -62,6 +63,20 @@ ApplicationWindow {
             Layout.fillHeight: true
             Layout.fillWidth: true
             visible: showRightPane
+        }
+
+        states: State {
+            name: "mobile"
+            when: !showLeftToolbar
+            PropertyChanges {
+                target: toolbarLoader
+                opacity: 0
+            }
+        }
+
+        transitions: Transition {
+            to: "mobile"; reversible: true;
+            NumberAnimation { properties: "opacity"; duration: 320;}
         }
     }
 
@@ -118,8 +133,6 @@ ApplicationWindow {
     Component.onCompleted: {
         NetworkManager.onRecieved_error.connect(printErr)
     }
-
-
 
     function printErr(cmd, msg) {
         console.log("[GOT ERROR FROM SERVER]\n\n\tFOR CMD:", cmd,

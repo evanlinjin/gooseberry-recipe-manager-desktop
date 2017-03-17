@@ -9,12 +9,17 @@ import "../"
 
 Page{
     header: DynamicToolBar {
-        leftButtonVisible: !showLeftToolbar
-        leftButtonIcon: "back"
-        leftButtonToolTip: "Back"
-        leftButtonTrigger: drawer.close
-
-        headerText: "Menu"
+        component: RowLayout {
+            IconToolButton {
+                id: backButton
+                iconName: "back"
+                ToolTip.text: "Back"
+                visible: !showLeftToolbar
+                onClicked: drawer.close()
+            }
+            Spacer { visible: !backButton.visible }
+            HeaderLabel { text: "Menu" }
+        }
     }
 
     ListView {

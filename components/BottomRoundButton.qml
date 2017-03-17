@@ -13,10 +13,10 @@ RoundButton {
 
     anchors.bottom: parent.bottom
     anchors.right: parent.right
-    anchors.margins: 30
+    anchors.margins: 15
     background.opacity: 1
-    width: 60
-    height: 60
+    width: 65
+    height: 65
     z: parent.z + 10
     Icon {
         id: icon
@@ -24,7 +24,7 @@ RoundButton {
         anchors.centerIn: parent
         overlay: true
         color: Material.background
-        size: 16
+        size: 14
     }
     highlighted: true
     Material.accent: Material.Green
