@@ -17,8 +17,6 @@ public:
 
     enum Roles {
         nameRole = Qt::UserRole + 1,
-        descriptionRole,
-        kgPerCupRole,
         tagsRole
     };
 

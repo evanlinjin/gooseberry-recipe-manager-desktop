@@ -11,15 +11,26 @@ Page {
     id: panePage
     anchors.fill: parent
     header: DynamicToolBar {
-//        leftButtonVisible: !showLeftToolbar
-//        leftButtonIcon: "contents"
-//        leftButtonToolTip: "Menu"
-//        leftButtonTrigger: function() {drawer.open()}
-
-//        showReload: true
-//        reloadTrigger: mainMeasurementsModel.reload
-
-//        headerText: "Measurements"
+        component: RowLayout {
+            IconToolButton {
+                id: menuButton
+                iconName: "contents"
+                ToolTip.text: "Menu"
+                visible: !showLeftToolbar
+                onClicked: drawer.open()
+            }
+            Spacer {
+                visible: !menuButton.visible
+            }
+            HeaderLabel {
+                text: "Measurements"
+            }
+            IconToolButton {
+                iconName: "refresh"
+                ToolTip.text: "Reload"
+                onClicked: mainMeasurementsModel.reload()
+            }
+        }
     }
 
     objectName: "__measurements__"

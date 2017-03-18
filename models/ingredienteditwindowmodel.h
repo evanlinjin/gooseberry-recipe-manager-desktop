@@ -53,7 +53,7 @@ public slots:
     void linkUp(QString key, NetworkManager* nm, MeasurementsModel* mm, IngredientsModel *im);
     void addTag(QString v);
     void removeTag(QString v);
-    void changeConversion(QString wv, int wu, QString vv, int vu);
+//    void changeConversion(QString wv, int wu, QString vv, int vu);
 
     void deleteIngredient();
     void revertChanges();

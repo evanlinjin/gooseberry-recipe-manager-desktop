@@ -30,12 +30,6 @@ Page {
                 onClicked: deleteDialog.open()
             }
             IconToolButton {
-                iconName: "refresh"
-                ToolTip.text: "Refresh"
-                visible: m.editMode
-                onClicked: m.revertChanges()
-            }
-            IconToolButton {
                 iconName: "tick"
                 ToolTip.text: "Done"
                 enabled: m.name != ""
@@ -58,33 +52,28 @@ Page {
                     Layout.fillWidth: true
                     Layout.alignment: Layout.Center
                     Layout.maximumWidth: maxWidth
-
-                    property int maxWidth1: 670
+                    property int maxWidth1: 620
                     property int maxWidth2: rows === 2 ? maxWidth*2/6 : maxWidth1
                     property int switchWidth: 210
-                    rows: parent.width > maxWidth - switchWidth ? 2 : -1
-
-                    flow: GridLayout.TopToBottom
-
+                    columns: parent.width > maxWidth - switchWidth ? 2 : 1
                     DynamicFrame {
                         id: nameGroup
                         Layout.maximumWidth: parent.maxWidth1
                         content: nameGroupComponent
+                        visible: !m.editMode
                     }
-
                     DynamicFrame {
                         id: tagsGroup
                         Layout.fillWidth: true
                         Layout.maximumWidth: parent.maxWidth1
                         content: tagsGroupComponent
                     }
-
-                    DynamicFrame {
-                        id: conversionGroup
-                        Layout.fillWidth: true
-                        Layout.maximumWidth: parent.maxWidth2
-                        content: conversionGroupComponent
-                    }
+//                    DynamicFrame {
+//                        id: conversionGroup
+//                        Layout.fillWidth: true
+//                        Layout.maximumWidth: parent.maxWidth2
+//                        content: conversionGroupComponent
+//                    }
                 }
             }
         }
@@ -100,23 +89,10 @@ Page {
         id: nameGroupComponent
         ColumnLayout {
             property alias nameInput: name_input.text
-            property alias descInput: desc_input.text
-
             Label {text: "Name"; font.bold: true; visible: !m.editMode}
-
             TitleTextField {
                 id: name_input
                 placeholderText: "Name"
-                visible: !m.editMode
-            }
-
-            Label {text: "\nDescription"; font.bold: true;}
-
-            TextArea {
-                id: desc_input
-                placeholderText: "Enter description"
-                Layout.fillWidth: true
-                wrapMode: TextArea.Wrap
             }
         }
     }
@@ -124,63 +100,52 @@ Page {
     Component {
         id: tagsGroupComponent
         ColumnLayout {
-            Label {text: "Tags\n"; font.bold: true}
-
+            Label {text: "Tags"; font.bold: true}
+            Spacer {visible: tagsView.visible}
             ListView {
                 id: tagsView
                 Layout.fillWidth: true
+                Layout.fillHeight: true
                 height: contentHeight
                 width: parent.width
                 contentHeight: 40
                 spacing: 10
                 orientation: ListView.Horizontal
                 clip: true
+                visible: count > 0
                 model: m.tags
                 delegate: TagItem {
                     text: modelData
                     xButton.onClicked: m.removeTag(modelData)
                 }
-                ScrollBar.horizontal: ScrollBar {}
+                ScrollIndicator.horizontal: ScrollIndicator{ active: true }
             }
-
-            RowLayout {
+            TextField {
+                id: addTagField
+                placeholderText: "Add tag..."
                 Layout.fillWidth: true
-
-                TextField {
-                    id: addTagField
-                    placeholderText: "Add tag..."
-                    Layout.fillWidth: true
-                    validator: RegExpValidator {regExp: /^[a-z]+$/}
-                    inputMethodHints: Qt.ImhLowercaseOnly
-                    onAccepted: {m.addTag(text); clear()}
-                }
-
-                IconToolButton {
-                    id: addButton
-                    iconName: "add"
-                    iconColor: Material.primary
-                    ToolTip.text: "Add tag"
-                    onClicked: {m.addTag(addTagField.text); addTagField.clear()}
-                }
+                validator: RegExpValidator {regExp: /^[a-z ]+$/}
+                inputMethodHints: Qt.ImhLowercaseOnly
+                onAccepted: {m.addTag(text); clear()}
             }
         }
     }
 
-    Component {
-        id: conversionGroupComponent
-        ColumnLayout {
-            Label {text: "Conversions\n"; font.bold: true}
-
-            GridLayout {
-                Layout.fillWidth: true
-                Layout.maximumWidth: 330
-                columns: 3
-                Label {text: "Weight/Volume:"; /*font.bold: true; */Layout.fillWidth: true}
-                Label {text: ("%1 kg/cup").arg(m.kgPCup); Layout.fillWidth: true}
-                IconToolButton {iconName: "edit"; onClicked: conversionDialog.open()}
-            }
-        }
-    }
+//    Component {
+//        id: conversionGroupComponent
+//        ColumnLayout {
+//            Label {text: "Conversions\n"; font.bold: true}
+//            GridLayout {
+//                Layout.fillWidth: true
+//                Layout.maximumWidth: 330
+//                Layout.minimumWidth: 280
+//                columns: 3
+//                Label {text: "Weight/Volume:"; /*font.bold: true; */Layout.fillWidth: true}
+//                Label {text: ("%1 kg/cup").arg(m.kgPCup); Layout.fillWidth: true}
+//                IconToolButton {iconName: "edit"; onClicked: conversionDialog.open()}
+//            }
+//        }
+//    }
 
     Dialog {
         id: conversionDialog
@@ -189,11 +154,11 @@ Page {
         modal: true
         onRejected: close()
         onAccepted: {
-            m.changeConversion(
-                        weight_value_input.text,
-                        weight_unit_input.currentIndex,
-                        volume_value_input.text,
-                        volume_unit_input.currentIndex)
+//            m.changeConversion(
+//                        weight_value_input.text,
+//                        weight_unit_input.currentIndex,
+//                        volume_value_input.text,
+//                        volume_unit_input.currentIndex)
             weight_value_input.clear()
             volume_value_input.clear()
         }
@@ -217,7 +182,6 @@ Page {
             id: dialogGrid
             columns: 3
             Layout.fillWidth: true
-
             DoubleTextField {
                 id: weight_value_input
                 placeholderText: "Weight"
@@ -257,27 +221,25 @@ Page {
         id: deleteDialog
         x: parent.width/2 - width/2
         y: parent.height/3 - width/3
-        title: ("Delete ingredient '%1'?").arg(m.name)
+        title: ("Delete ingredient?")
+        modal: true
+        Label {
+            anchors.centerIn: parent
+            text: "Are you sure you want to delete %1?".arg(m.name)
+        }
         standardButtons: Dialog.Ok | Dialog.Cancel
-
         onAccepted: {m.deleteIngredient(); closeRightPane()}
     }
 
     IngredientEditWindowModel {
         id: m
         name: nameGroup.item.nameInput
-        desc: nameGroup.item.descInput
         onQmlUpdateNeeded: {
             nameGroup.item.nameInput = name
             name = Qt.binding(function() {return nameGroup.item.nameInput})
-
-            nameGroup.item.descInput = desc
-            desc = Qt.binding(function() {return nameGroup.item.descInput})
-
             mainSelectedIngredient = name
         }
     }
-
 
     function open(name) {
         m.linkUp(name, NetworkManager, mainMeasurementsModel, mainIngredientsModel)

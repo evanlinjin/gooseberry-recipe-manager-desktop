@@ -4,13 +4,12 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.1
 import "../"
 
-Frame {
+Pane {
     id: frame
     property alias text: textLabel.text
     property alias xButton: mouseArea
     width: rowed.width + 15
     height: textLabel.height + 10
-//    Material.elevation: 1
 
     Row {
         id: rowed
@@ -31,7 +30,8 @@ Frame {
                 enabled: frame.enabled
             }
             overlay: true
-//            color: Material.primary
         }
     }
+    Material.theme: Material.Dark
+//    Material.elevation: 1
 }

@@ -9,6 +9,7 @@ Item {
     property alias size: image.width
     property alias color: overlay.color
     property alias overlay: overlay.visible
+    property alias image: image
     property string name
 
     Image {
@@ -16,18 +17,17 @@ Item {
         width: 18
         height: width
         smooth: true
-//        mipmap: true
         visible: true
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        fillMode: Image.PreserveAspectCrop
+        fillMode: Image.PreserveAspectFit
         source: ("qrc:/icons/%1.svg").arg(name)
 
         onSourceChanged: {
             overlay.source = image
         }
         enabled: parent.enabled
-        opacity: enabled ? 0.9 : 0.7
+        opacity: enabled ? 1 : 0.7
     }
 
     ColorOverlay {

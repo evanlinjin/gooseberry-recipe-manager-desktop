@@ -64,20 +64,6 @@ ApplicationWindow {
             Layout.fillWidth: true
             visible: showRightPane
         }
-
-        states: State {
-            name: "mobile"
-            when: !showLeftToolbar
-            PropertyChanges {
-                target: toolbarLoader
-                opacity: 0
-            }
-        }
-
-        transitions: Transition {
-            to: "mobile"; reversible: true;
-            NumberAnimation { properties: "opacity"; duration: 320;}
-        }
     }
 
     Drawer {

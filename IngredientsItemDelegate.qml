@@ -37,9 +37,10 @@ Item {
                     Layout.fillWidth: true
                 }
                 Label {
-                    text: description === "" ? "No description." : description
+                    text: tags.join(", ")
                     opacity: 0.6
                     font.pixelSize: ingredientName.font.pixelSize*4/5
+                    font.italic: true
                     elide: Label.ElideRight
                     Layout.fillWidth: true
                 }

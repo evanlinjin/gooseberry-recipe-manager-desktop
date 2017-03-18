@@ -68,21 +68,20 @@ void IngredientEditWindowModel::removeTag(QString v) {
     this->setTags(newTags);
 }
 
-void IngredientEditWindowModel::changeConversion(QString wv, int wu, QString vv, int vu) {
-    double weightValue = wv.toDouble();
-    double weightMultiply = getWeightsObj(wu)->property("multiply").toDouble();
-    double volumeValue = vv.toDouble();
-    double volumeMultiply = getVolumesObj(vu)->property("multiply").toDouble();
+//void IngredientEditWindowModel::changeConversion(QString wv, int wu, QString vv, int vu) {
+//    double weightValue = wv.toDouble();
+//    double weightMultiply = getWeightsObj(wu)->property("multiply").toDouble();
+//    double volumeValue = vv.toDouble();
+//    double volumeMultiply = getVolumesObj(vu)->property("multiply").toDouble();
 
-    if (weightValue <= 0 || weightMultiply <= 0 || volumeValue <= 0 || volumeMultiply <= 0) {
-        qDebug() << "Invalid input...";
-        return;
-    }
+//    if (weightValue <= 0 || weightMultiply <= 0 || volumeValue <= 0 || volumeMultiply <= 0) {
+//        qDebug() << "Invalid input...";
+//        return;
+//    }
 
-    double kgs = (weightValue * weightMultiply) / 1000;
-    double cps = (volumeValue * volumeMultiply) / 0.24;
-    setKgPCup(kgs/cps);
-}
+//    double kgs = (weightValue * weightMultiply) / 1000;
+//    double cps = (volumeValue * volumeMultiply) / 0.24;
+//}
 
 void IngredientEditWindowModel::process_get_ingredient_of_key_reply(DSIngredient v, QString id) {
     if (id != get_nid()) return;
@@ -106,7 +105,7 @@ void IngredientEditWindowModel::process_modify_ingredient_reply(DSIngredient v, 
 
 void IngredientEditWindowModel::process_delete_ingredient_reply(QString v, QString id) {
     if (id != get_nid()) return;
-    DSIngredient newM; newM.kg_per_cup = 0; this->setM(newM);
+    DSIngredient newM; this->setM(newM);
     this->m_editMode = false; emit editModeChanged();
     this->setReady(); emit qmlUpdateNeeded();
     qDebug() << "Deleted Ingredient:" << v;
@@ -139,7 +138,6 @@ void IngredientEditWindowModel::submitChanges() {
 void IngredientEditWindowModel::clear() {
     setNotReady();
     DSIngredient v;
-    v.kg_per_cup = 0;
     setM(v);
     emit qmlUpdateNeeded();
 }

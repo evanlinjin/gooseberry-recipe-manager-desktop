@@ -77,8 +77,6 @@ void NetworkManager::getIngredient(QJsonValue &v, DSIngredient &vItem) {
     auto d = v.toObject();
 
     vItem.name = d["name"].toString();
-    vItem.description = d["description"].toString();
-    vItem.kg_per_cup = d["kg_per_cup"].toDouble();
 
     QJsonArray tags = d["tags"].toArray();
     for (int j = 0; j < tags.size(); j++) {
@@ -88,8 +86,6 @@ void NetworkManager::getIngredient(QJsonValue &v, DSIngredient &vItem) {
 
 void NetworkManager::getIngredientJsonObj(DSIngredient &v, QJsonObject &obj) {
     obj["name"] = v.name;
-    obj["description"] = v.description;
-    obj["kg_per_cup"] = v.kg_per_cup;
     QJsonArray tags;
     for (int i = 0; i < v.tags.size(); i++) {
         tags.append(v.tags.at(i));
@@ -151,8 +147,6 @@ void NetworkManager::process_get_ingredient_of_key(QJsonValue &v, QString &id) {
 void NetworkManager::modify_ingredient(DSIngredient v, QString id) {
     QJsonObject obj;
     obj["name"] = v.name;
-    obj["description"] = v.description;
-    obj["kg_per_cup"] = v.kg_per_cup;
     QJsonArray tags;
     for (int i = 0; i < v.tags.size(); i++) {
         tags.append(v.tags.at(i));
@@ -172,8 +166,6 @@ void NetworkManager::process_modify_ingredient(QJsonValue &v, QString &id) {
 void NetworkManager::add_ingredient(DSIngredient v, QString id) {
     QJsonObject obj;
     obj["name"] = v.name;
-    obj["description"] = v.description;
-    obj["kg_per_cup"] = v.kg_per_cup;
     QJsonArray tags;
     for (int i = 0; i < v.tags.size(); i++) {
         tags.append(v.tags.at(i));

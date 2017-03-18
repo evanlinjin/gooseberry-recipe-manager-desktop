@@ -28,8 +28,6 @@ struct DSMeasurement {
 
 struct DSIngredient {
     QString name;
-    QString description;
-    double kg_per_cup;
     QStringList tags;
 };
 
@@ -70,21 +68,15 @@ public slots:
 class Ingredient : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QString desc READ desc WRITE setDesc NOTIFY descChanged)
-    Q_PROPERTY(double kgPCup READ kgPCup WRITE setKgPCup NOTIFY kgPCupChanged)
     Q_PROPERTY(QStringList tags READ tags WRITE setTags NOTIFY tagsChanged)
 
 public:
-    explicit Ingredient(QObject *parent = 0) : QObject(parent) {m.kg_per_cup = 0;}
+    explicit Ingredient(QObject *parent = 0) : QObject(parent) {}
 
     QString name() const {return m.name;}
-    QString desc() const {return m.description;}
-    double kgPCup() const {return m.kg_per_cup;}
     QStringList tags() const {return m.tags;}
 
     void setName(const QString &v) {if (v == m.name) return; m.name = v; emit nameChanged();}
-    void setDesc(const QString &v) {if (v == m.description) return; m.description = v; emit descChanged();}
-    void setKgPCup(const double &v) {if (v == m.kg_per_cup) return; m.kg_per_cup = v; emit kgPCupChanged();}
     void setTags(const QStringList &v) {if (v == m.tags) return; m.tags = v; emit tagsChanged();}
 
 private:
@@ -92,12 +84,10 @@ private:
 
 signals:
     void nameChanged();
-    void descChanged();
-    void kgPCupChanged();
     void tagsChanged();
 
 public slots:
-    void setM(DSIngredient v) {m = v; emit nameChanged(); emit descChanged(); emit kgPCupChanged(); emit tagsChanged();}
+    void setM(DSIngredient v) {m = v; emit nameChanged(); emit tagsChanged();}
     DSIngredient getM() {return m;}
 };
 

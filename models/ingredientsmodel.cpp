@@ -7,8 +7,6 @@ IngredientsModel::IngredientsModel(QObject *parent) :
 QHash<int, QByteArray> IngredientsModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[nameRole] = "name";
-    roles[descriptionRole] = "description";
-    roles[kgPerCupRole] = "kg_per_cup";
     roles[tagsRole] = "tags";
     return roles;
 }
@@ -20,8 +18,6 @@ QVariant IngredientsModel::data(const QModelIndex &index, int role) const {
     int i = index.row();
     switch (role) {
     case nameRole: return m_list[i].name;
-    case descriptionRole: return m_list[i].description;
-    case kgPerCupRole: return m_list[i].kg_per_cup;
     case tagsRole: return m_list[i].tags;
     }
     return QVariant();
