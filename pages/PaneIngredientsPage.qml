@@ -52,12 +52,8 @@ Page {
     Component {
         id: dynamicSB
         DynamicSearchBar {
-            leftButtonVisible: !showLeftToolbar
-            leftButtonIcon: "contents"
-            leftButtonToolTip: "Menu"
-            leftButtonTrigger: function() {drawer.open()}
+            leftButtonTrigger: mainIngredientsModel.endSearchMode
             searchTrigger: mainIngredientsModel.search
-            closeTrigger: mainIngredientsModel.endSearchMode
         }
     }
 

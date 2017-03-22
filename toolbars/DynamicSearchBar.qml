@@ -7,12 +7,8 @@ import "../"
 
 ToolBar {
     id: toolBar
-    property alias leftButtonVisible: leftButton.visible
-    property alias leftButtonIcon: leftButton.iconName
-    property string leftButtonToolTip: "Back"
     property var leftButtonTrigger: function(){}
     property var searchTrigger: function(v){console.log("Unprocessed Query:", v)}
-    property var closeTrigger: function(){}
 
     Material.elevation: 1
     height: 55
@@ -29,8 +25,8 @@ ToolBar {
         IconToolButton {
             id: leftButton
             iconName: "back"
-            ToolTip.text: leftButtonToolTip
-            visible: false
+            ToolTip.text: "Back"
+            visible: true
             onClicked: leftButtonTrigger()
         }
 
@@ -50,10 +46,10 @@ ToolBar {
         }
 
         IconToolButton {
-            id: closeButton
+            id: clearButton
             iconName: "close"
-            ToolTip.text: "Close"
-            onClicked: closeTrigger()
+            ToolTip.text: "Clear"
+            onClicked: {searchField.clear(); searchField.forceActiveFocus()}
         }
     }
 }
