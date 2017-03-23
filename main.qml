@@ -102,9 +102,8 @@ ApplicationWindow {
     }
 
     function openEditIngredient(name) {
-        rightPaneLoader.sourceComponent = ingredientEditPane
-        rightPaneLoader.item.open(name)
-        rightPaneOpen = true
+        ingredientPopup.open()
+        peipView.open(name)
     }
 
     function closeRightPane() {
@@ -114,6 +113,7 @@ ApplicationWindow {
 
         // reset properties.
         mainSelectedIngredient = ""
+        ingredientPopup.close()
     }
 
     Component.onCompleted: {
@@ -124,5 +124,20 @@ ApplicationWindow {
         console.log("[GOT ERROR FROM SERVER]\n\n\tFOR CMD:", cmd,
                     "\n\tERROR MESSAGE:\n", msg)
         console.log("[END ERROR FROM SERVER]\n")
+    }
+
+    Popup {
+        id: ingredientPopup
+        parent: leftPaneLoader
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        width: twoPanePossible ? maxWidth/2 : parent.width
+        height: twoPanePossible ? (parent.height < 600 ? parent.height : 600) : parent.height
+        modal: true
+        padding: 0
+        PaneEditIngredientPage {
+            id: peipView
+        }
+        onClosed: mainSelectedIngredient = ""
     }
 }

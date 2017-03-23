@@ -10,7 +10,7 @@ ToolBar {
 
     property alias component: loader.sourceComponent
 
-    Material.elevation: 1
+    Material.elevation: 0
     height: 55
     Material.primary: Material.background
 

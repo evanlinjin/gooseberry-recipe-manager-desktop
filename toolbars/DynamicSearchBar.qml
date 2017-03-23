@@ -10,7 +10,7 @@ ToolBar {
     property var leftButtonTrigger: function(){}
     property var searchTrigger: function(v){console.log("Unprocessed Query:", v)}
 
-    Material.elevation: 1
+    Material.elevation: 0
     height: 55
     Material.primary: Material.background
     ColumnLayout {

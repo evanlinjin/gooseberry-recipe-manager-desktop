@@ -16,8 +16,8 @@ Page {
     header: DynamicToolBar {
         component: RowLayout {
             IconToolButton {
-                iconName: "back"
-                ToolTip.text: "Back"
+                iconName: twoPanePossible ? "close" : "back"
+                ToolTip.text: twoPanePossible ? "Close" : "Back"
                 onClicked: closeRightPane()
             }
             HeaderLabel {
@@ -33,7 +33,7 @@ Page {
                 iconName: "tick"
                 ToolTip.text: "Done"
                 enabled: m.name != ""
-                onClicked: {m.submitChanges(); if (!twoPanePossible) closeRightPane()}
+                onClicked: {m.submitChanges(); closeRightPane()}
             }
         }
     }
@@ -45,35 +45,32 @@ Page {
         ScrollBar.vertical: ScrollBar {}
         model: VisualItemModel {
             ColumnLayout {
-                width: parent.width
-                GridLayout {
-                    id: layoutFields
-                    Layout.fillHeight: true
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 10
+                Spacer {}
+                Label {text: "Name"; font.bold: true; visible: !m.editMode}
+                TitleTextField {
+                    id: nameField
+                    visible: !m.editMode
+                    placeholderText: "Name"
+                }
+                Spacer {}
+                Label {text: "Tags"; font.bold: true}
+                Spacer {visible: tagsFlow.visible}
+                Flow {
+                    id: tagsFlow
                     Layout.fillWidth: true
-                    Layout.alignment: Layout.Center
-                    Layout.maximumWidth: maxWidth
-                    property int maxWidth1: 620
-                    property int maxWidth2: rows === 2 ? maxWidth*2/6 : maxWidth1
-                    property int switchWidth: 210
-                    columns: parent.width > maxWidth - switchWidth ? 2 : 1
-                    DynamicFrame {
-                        id: nameGroup
-                        Layout.maximumWidth: parent.maxWidth1
-                        content: nameGroupComponent
-                        visible: !m.editMode
-                    }
-                    DynamicFrame {
-                        id: tagsGroup
-                        Layout.fillWidth: true
-                        Layout.maximumWidth: parent.maxWidth1
-                        content: tagsGroupComponent
-                    }
-//                    DynamicFrame {
-//                        id: conversionGroup
-//                        Layout.fillWidth: true
-//                        Layout.maximumWidth: parent.maxWidth2
-//                        content: conversionGroupComponent
-//                    }
+                    spacing: 10
+                    visible: m.tags.length > 0
+                    Component.onCompleted: m.onTagsChanged.connect(reloadTags)
+                }
+                TextField {
+                    id: addTagField
+                    placeholderText: "Add tag..."
+                    Layout.fillWidth: true
+                    validator: RegExpValidator {regExp: /^[a-z ]+$/}
+                    onAccepted: {m.addTag(text); clear()}
                 }
             }
         }
@@ -82,145 +79,14 @@ Page {
     BusyIndicator {
         anchors.centerIn: parent
         running: !m.ready
-        z: layoutFields.z + 100
-    }
-
-    Component {
-        id: nameGroupComponent
-        ColumnLayout {
-            property alias nameInput: name_input.text
-            Label {text: "Name"; font.bold: true; visible: !m.editMode}
-            TitleTextField {
-                id: name_input
-                placeholderText: "Name"
-            }
-        }
-    }
-
-    Component {
-        id: tagsGroupComponent
-        ColumnLayout {
-            Label {text: "Tags"; font.bold: true}
-            Spacer {visible: tagsView.visible}
-            ListView {
-                id: tagsView
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                height: contentHeight
-                width: parent.width
-                contentHeight: 40
-                spacing: 10
-                orientation: ListView.Horizontal
-                clip: true
-                visible: count > 0
-                model: m.tags
-                delegate: TagItem {
-                    text: modelData
-                    xButton.onClicked: m.removeTag(modelData)
-                }
-                ScrollIndicator.horizontal: ScrollIndicator{ active: true }
-            }
-            TextField {
-                id: addTagField
-                placeholderText: "Add tag..."
-                Layout.fillWidth: true
-                validator: RegExpValidator {regExp: /^[a-z ]+$/}
-                inputMethodHints: Qt.ImhLowercaseOnly
-                onAccepted: {m.addTag(text); clear()}
-            }
-        }
-    }
-
-//    Component {
-//        id: conversionGroupComponent
-//        ColumnLayout {
-//            Label {text: "Conversions\n"; font.bold: true}
-//            GridLayout {
-//                Layout.fillWidth: true
-//                Layout.maximumWidth: 330
-//                Layout.minimumWidth: 280
-//                columns: 3
-//                Label {text: "Weight/Volume:"; /*font.bold: true; */Layout.fillWidth: true}
-//                Label {text: ("%1 kg/cup").arg(m.kgPCup); Layout.fillWidth: true}
-//                IconToolButton {iconName: "edit"; onClicked: conversionDialog.open()}
-//            }
-//        }
-//    }
-
-    Dialog {
-        id: conversionDialog
-        x: parent.width/2 - width/2
-        y: parent.height/3 - width/3
-        modal: true
-        onRejected: close()
-        onAccepted: {
-//            m.changeConversion(
-//                        weight_value_input.text,
-//                        weight_unit_input.currentIndex,
-//                        volume_value_input.text,
-//                        volume_unit_input.currentIndex)
-            weight_value_input.clear()
-            volume_value_input.clear()
-        }
-        footer: DialogButtonBox {
-            Button {
-                text: qsTr("Cancel")
-                DialogButtonBox.buttonRole: DialogButtonBox.DestructiveRole
-                flat: true
-                onClicked: conversionDialog.close()
-            }
-            Button {
-                text: qsTr("Change conversion")
-                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
-                enabled: parseFloat(weight_value_input.text) >= 0 &&
-                         parseFloat(volume_value_input.text) >= 0
-                flat: true
-            }
-        }
-
-        GridLayout {
-            id: dialogGrid
-            columns: 3
-            Layout.fillWidth: true
-            DoubleTextField {
-                id: weight_value_input
-                placeholderText: "Weight"
-                Layout.fillWidth: true
-            }
-            Label {
-                text: "<h1>  =  </h1>"
-                Layout.minimumWidth: 30
-                horizontalAlignment: Label.AlignHCenter
-                Layout.rowSpan: 2
-            }
-            DoubleTextField {
-                id: volume_value_input
-                placeholderText: "Volume"
-                Layout.fillWidth: true
-            }
-            ComboBox {
-                id: weight_unit_input
-                Layout.fillWidth: true
-                textRole: "symbol"
-                displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
-                model: m.weights
-                Material.elevation: 1
-            }
-            ComboBox {
-                id: volume_unit_input
-                Layout.fillWidth: true
-                textRole: "symbol"
-                displayText: currentIndex === -1 ? "" : model[currentIndex].symbol
-                model: m.volumes
-                Material.elevation: 1
-            }
-        }
+        z: flickable.z + 100
     }
 
     Dialog {
         id: deleteDialog
-        x: parent.width/2 - width/2
-        y: parent.height/3 - width/3
+        x: (parent.width - width)/2
+        y: (parent.height - height)/2
+        parent: ApplicationWindow.overlay
         title: ("Delete ingredient?")
         modal: true
         Label {
@@ -233,11 +99,21 @@ Page {
 
     IngredientEditWindowModel {
         id: m
-        name: nameGroup.item.nameInput
+        name: nameField.text
         onQmlUpdateNeeded: {
-            nameGroup.item.nameInput = name
-            name = Qt.binding(function() {return nameGroup.item.nameInput})
+            nameField.text = name
+            name = Qt.binding(function() {return nameField.text})
             mainSelectedIngredient = name
+        }
+    }
+
+    function reloadTags() {
+        for (var i = 0; i < tagsFlow.data.length; i++) {
+            tagsFlow.data[i].destroy()
+        }
+        for (i = 0; i < m.tags.length; i++) {
+            Qt.createComponent("qrc:/components/TagItem.qml").createObject( tagsFlow,
+                        {text: m.tags[i], trigger: function(n) {m.removeTag(n)}})
         }
     }
 

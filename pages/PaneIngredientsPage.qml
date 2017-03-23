@@ -79,6 +79,4 @@ Page {
         ToolTip.text: "New Ingredient"
         onClicked: openEditIngredient()
     }
-
-    Separator{}
 }

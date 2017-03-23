@@ -17,7 +17,8 @@ Item {
         anchors.verticalCenterOffset: item.spacing/2
         width: parent.width - item.spacing*2
         height: parent.height - item.spacing*2
-        Material.elevation: 1//ingredientsPane.implicitWidth*2 > ingredientsPane.width ? 0 : 1
+        Material.theme: Material.Dark
+        Material.elevation: 0//ingredientsPane.implicitWidth*2 > ingredientsPane.width ? 0 : 1
 
         ItemDelegate {
             id: delegate

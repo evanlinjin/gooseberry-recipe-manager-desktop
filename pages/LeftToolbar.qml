@@ -8,6 +8,7 @@ import "../toolbars"
 import "../"
 
 Page{
+    Material.theme: Material.Dark
     header: DynamicToolBar {
         component: RowLayout {
             IconToolButton {
@@ -49,6 +50,4 @@ Page{
             }
         }
     }
-
-    Separator{}
 }
